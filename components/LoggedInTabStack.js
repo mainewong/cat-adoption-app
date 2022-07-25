@@ -1,8 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DiscoverStack from '../components/DiscoverStack';
-import ProfileStack from '../components/ProfileStack';
 import NoticesStack from '../components/NoticesStack';
+import FavouriteStack from '../components/FavouriteStack';
+import ProfileStack from '../components/ProfileStack';
 
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -15,9 +16,12 @@ export default function LoggedInStack() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
-
-          if (route.name === 'Notices') {
-            iconName = "comments"
+          if (route.name === 'Discover') {
+            iconName = "paw" 
+          } else if (route.name === 'My Notices') {
+            iconName = "newspaper-o"
+          } else if (route.name === 'Favourite') {
+            iconName = "heart"
           } else if (route.name === 'Profile') {
             iconName = "user"
           }
@@ -33,10 +37,10 @@ export default function LoggedInStack() {
         // }
       }}
       >
-        {/* <Tab.Screen name="Discover" component={DiscoverStack} /> */}
-        <Tab.Screen name="Notices" component={NoticesStack} />
-        {/*<Tab.Screen name="Favourite" component={FavouriteStack} /> */}
-        <Tab.Screen name="Profile" component={ProfileStack} />
+        <Tab.Screen name="Discover" component={DiscoverStack} />
+        <Tab.Screen name="My Notices" component={NoticesStack} options= {{headerShown: false }}/>
+        <Tab.Screen name="Favourite" component={FavouriteStack} /> 
+        <Tab.Screen name="Profile" component={ProfileStack} options= {{headerShown: false }} />
     </Tab.Navigator>
   )
 }

@@ -9,10 +9,11 @@ export default function ProfileStack() {
 
     return (
     <Stack.Navigator>
-      <Stack.Screen component={ProfileScreen} name="Profile" options={{
+      <Stack.Screen component={ProfileScreen} name="account" options={{
           title: "Your Account",
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle, headerLeft: null
+          headerTitleStyle: styles.headerTitle, headerLeft: null,
+          headerShown: false,
         }} />
        
     </Stack.Navigator>
