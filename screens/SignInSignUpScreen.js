@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform
 } from "react-native";
 import firebase from "../database/firebaseDB";
 const auth = firebase.auth();

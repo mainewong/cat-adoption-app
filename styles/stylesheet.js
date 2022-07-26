@@ -37,6 +37,23 @@ export const stylesheet = {
     fontWeight: "700",
     fontSize: 16,
   },
+  input: {
+    fontSize: 16,
+    backgroundColor: "white",
+    borderColor: "lightgrey",
+    borderWidth: 1,
+    borderRadius: 2,
+    marginBottom: 0,
+    height: 35,
+    paddingLeft: 10,
+    color: "#3F5362",
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    marginLeft: 5,
+    marginTop: 10,
+  },
 };
 
 //   export const lightStyles = {
