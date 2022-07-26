@@ -3,6 +3,7 @@ import React from 'react'
 import firebase from "../database/firebaseDB";
 import { stylesheet } from '../styles/stylesheet';
 
+
 const CreateScreen = () => {
   return (
     <View style={stylesheet.container}>
