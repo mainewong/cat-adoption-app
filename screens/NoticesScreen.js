@@ -11,14 +11,15 @@ import { FontAwesome } from "@expo/vector-icons";
 import firebase from "../database/firebaseDB";
 import { collection, getDocs } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
-
+const auth = firebase.auth();
 
 const db = firebase.firestore().collection("posts");
+//const user = auth.currentUser?.uid
 
 export default function NoticesScreen({ navigation, route }) {
 
-  const [posts, setPosts] = useState([]);
-  
+  const [myPosts, setMyPosts] = useState([]);
+  const user = auth.currentUser?.uid
 
   function addPost() {
     navigation.navigate("Add");
@@ -37,20 +38,7 @@ export default function NoticesScreen({ navigation, route }) {
       ),
     });
   });
-
-  // Monitor route.params for changes and add items to the database
-  useEffect(() => {
-    if (route.params?.catName) {
-      const newPost = {
-        catName: route.params.catName,
-        catAge: route.params.catAge,
-        breed: route.params.breed,
-        created: firebase.firestore.FieldValue.serverTimestamp(),
-      };
-      db.add(newPost);
-    }
-  }, [route.params?.catName]);
-
+  
   useEffect(() => {
     const unsubscribe = db.orderBy("created").onSnapshot((collection) => {
         const updatedPosts = collection.docs.map((doc) => {
@@ -58,17 +46,14 @@ export default function NoticesScreen({ navigation, route }) {
             ...doc.data(),
             id: doc.id,
           };
-          console.log(postObject);
+          //console.log(postObject);
           return postObject;
         });
-
-        setPosts(updatedPosts);
+        setMyPosts(updatedPosts);
       });
-
-    return () => {
-      unsubscribe()
-    }
-  }, [])
+     
+    return () => { unsubscribe();
+    } }, [user, myPosts])
 
   function deletePost(id) {
     console.log("Deleting " + id);
@@ -102,7 +87,7 @@ export default function NoticesScreen({ navigation, route }) {
     <View style={stylesheet.container}>
       
       <FlatList
-        data={posts}
+        data={myPosts}
         renderItem={renderItem}
         style={{ width: "100%" }}
         keyExtractor={(item) => item.id.toString()}

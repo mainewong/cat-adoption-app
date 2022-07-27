@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/core";
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import firebase from "../database/firebaseDB";
 import SignInSignUpScreen from "./SignInSignUpScreen";
@@ -7,6 +7,7 @@ import { stylesheet } from "../styles/stylesheet";
 const auth = firebase.auth();
 
 export default function ProfileScreen({ navigation }) {
+  
   const signOut = async () => {
 
     navigation.navigate("SignInSignUp")

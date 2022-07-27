@@ -4,16 +4,36 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "../database/firebaseDB";
 import { stylesheet } from "../styles/stylesheet";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+const auth = firebase.auth();
+const db = firebase.firestore().collection("posts");
+const user = auth.currentUser?.uid
 
 export default function CreateScreen({ navigation }) {
   const [catName, setCatName] = useState("");
   const [catAge, setCatAge] = useState("");
   const [breed, setBreed] = useState("");
+
+  // Monitor route.params for changes and add items to the database
+  async function savePost() {
+      const newPost = {
+        user: user,
+        catName: catName,
+        catAge: catAge,
+        breed: breed,
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      db.add(newPost);
+      Alert.alert(
+        'Post published!'
+      )
+      navigation.navigate("MyNotices")
+  }
 
   return (
     <KeyboardAwareScrollView>
@@ -38,7 +58,7 @@ export default function CreateScreen({ navigation }) {
         />
         <TouchableOpacity
           style={stylesheet.button}
-          onPress={() => navigation.navigate("MyNotices", { catName, catAge, breed })}
+          onPress={savePost}
           >
           <Text style={stylesheet.buttonText}>Save</Text>
         </TouchableOpacity>
