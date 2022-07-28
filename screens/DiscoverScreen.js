@@ -6,14 +6,14 @@ import { collection, getDocs } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
 const auth = firebase.auth();
 
-const db = firebase.firestore().collection("posts");
+const db = firebase.firestore()
 
 export default function DiscoverScreen() {
   const [allPosts, setAllPosts] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = db.orderBy("created").onSnapshot((collection) => {
-        const updatedPosts = collection.docs.map((doc) => {
+    const unsubscribe = db.collection("posts").onSnapshot((collection) => {
+        const data = collection.docs.map((doc) => {
           const postObject = {
             ...doc.data(),
             id: doc.id,
@@ -22,7 +22,7 @@ export default function DiscoverScreen() {
           return postObject;
         });
 
-        setAllPosts(updatedPosts);
+        setAllPosts(data);
       });
 
     return () => {

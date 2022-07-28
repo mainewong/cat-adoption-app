@@ -13,13 +13,13 @@ import { collection, getDocs } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
 const auth = firebase.auth();
 
-const db = firebase.firestore().collection("posts");
+//const db = firebase.firestore().collection("posts");
+const db = firebase.firestore();
 //const user = auth.currentUser?.uid
 
 export default function NoticesScreen({ navigation, route }) {
-
   const [myPosts, setMyPosts] = useState([]);
-  const user = auth.currentUser?.uid
+  const user = auth.currentUser?.uid;
 
   function addPost() {
     navigation.navigate("Add");
@@ -38,54 +38,65 @@ export default function NoticesScreen({ navigation, route }) {
       ),
     });
   });
-  
+
   useEffect(() => {
-    const unsubscribe = db.orderBy("created").onSnapshot((collection) => {
-        const updatedPosts = collection.docs.map((doc) => {
-          const postObject = {
-            ...doc.data(),
-            id: doc.id,
-          };
-          //console.log(postObject);
-          return postObject;
-        });
-        setMyPosts(updatedPosts);
+    const unsubscribe = db.collection("posts").onSnapshot((collection) => {
+      const data = collection.docs.map((doc) => {
+        const postObject = {
+          ...doc.data(),
+          id: doc.id,
+        };
+        //console.log(postObject);
+        return postObject;
       });
-     
-    return () => { unsubscribe();
-    } }, [user, myPosts])
+      setMyPosts(data);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user, myPosts]);
 
   function deletePost(id) {
     console.log("Deleting " + id);
     // To delete that item, we filter out the item we don't want
     //setNotes(notes.filter((item) => item.id !== id));
-    db.doc(id).delete();   
+    db.doc(id).delete();
   }
 
   function renderItem({ item }) {
     return (
-      <View
-        style={{
-          padding: 10,
-          paddingTop: 20,
-          paddingBottom: 20,
-          borderBottomColor: "#ccc",
-          borderBottomWidth: 1,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Details", {
+            id: item.id,
+          })
+        }
       >
-        <Text>{item.catName}</Text>
-        <TouchableOpacity onPress={() => deletePost(item.id)}>
-          <Ionicons name="trash" size={16} color="#944" />
-        </TouchableOpacity>
-      </View>
+        <View
+          style={{
+            padding: 10,
+            paddingTop: 20,
+            paddingBottom: 20,
+            borderBottomColor: "#ccc",
+            borderBottomWidth: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text>{item.catName}</Text>
+          <Text>{item.catAge}</Text>
+          <TouchableOpacity onPress={() => deletePost(item.id)}>
+            <Ionicons name="trash" size={16} color="#944" />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
     );
   }
 
   return (
+    
     <View style={stylesheet.container}>
-      
       <FlatList
         data={myPosts}
         renderItem={renderItem}
@@ -93,6 +104,7 @@ export default function NoticesScreen({ navigation, route }) {
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
+   
   );
 }
 

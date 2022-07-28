@@ -12,7 +12,7 @@ import { stylesheet } from "../styles/stylesheet";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 const auth = firebase.auth();
 const db = firebase.firestore().collection("posts");
-const user = auth.currentUser?.uid
+const uid = auth.currentUser?.uid
 
 export default function CreateScreen({ navigation }) {
   const [catName, setCatName] = useState("");
@@ -22,7 +22,7 @@ export default function CreateScreen({ navigation }) {
   // Monitor route.params for changes and add items to the database
   async function savePost() {
       const newPost = {
-        user: user,
+        uid: uid,
         catName: catName,
         catAge: catAge,
         breed: breed,
