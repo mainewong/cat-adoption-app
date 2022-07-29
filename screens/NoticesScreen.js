@@ -12,14 +12,25 @@ import firebase from "../database/firebaseDB";
 import { collection, getDocs } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
 const auth = firebase.auth();
-
-//const db = firebase.firestore().collection("posts");
 const db = firebase.firestore();
-//const user = auth.currentUser?.uid
+
 
 export default function NoticesScreen({ navigation, route }) {
   const [myPosts, setMyPosts] = useState([]);
-  const user = auth.currentUser?.uid;
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    console.log("Setting up nav listener");
+    // Check for when we come back to this screen
+    const removeListener = navigation.addListener("focus", () => {
+      console.log("Running nav listener");
+      getData();
+    });
+    getData();
+    return removeListener;
+  }, [user]);
+
+  // const user = auth.currentUser?.uid;
 
   function addPost() {
     navigation.navigate("Add");
@@ -39,23 +50,44 @@ export default function NoticesScreen({ navigation, route }) {
     });
   });
 
-  useEffect(() => {
-    const unsubscribe = db.collection("posts").onSnapshot((collection) => {
-      const data = collection.docs.map((doc) => {
-        const postObject = {
-          ...doc.data(),
-          id: doc.id,
-        };
-        //console.log(postObject);
-        return postObject;
-      });
-      setMyPosts(data);
-    });
+  async function getData() {
+    const user = firebase.auth().currentUser;
+    const uid = user.uid;
 
-    return () => {
-      unsubscribe();
-    };
-  }, [user, myPosts]);
+    if (user) {
+      const unsubscribe = await db
+        .collection("posts")
+        .onSnapshot((collection) => {
+          const data = collection.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          console.log(data);
+          setMyPosts(data.filter((item) => item.uid === uid));
+          console.log(data.filter((item) => item.uid === uid))
+        });
+
+      return () => unsubscribe();
+    }
+  }
+
+  // useEffect(() => {
+  //   const unsubscribe = db.collection("posts").onSnapshot((collection) => {
+  //     const data = collection.docs.map((doc) => {
+  //       const postObject = {
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       };
+  //       //console.log(postObject);
+  //       return postObject;
+  //     });
+  //     setMyPosts(data);
+  //   });
+
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [user, myPosts]);
 
   function deletePost(id) {
     console.log("Deleting " + id);
@@ -95,7 +127,6 @@ export default function NoticesScreen({ navigation, route }) {
   }
 
   return (
-    
     <View style={stylesheet.container}>
       <FlatList
         data={myPosts}
@@ -104,7 +135,6 @@ export default function NoticesScreen({ navigation, route }) {
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
-   
   );
 }
 
