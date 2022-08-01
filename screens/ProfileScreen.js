@@ -15,8 +15,8 @@ export default function ProfileScreen({ navigation }) {
   useEffect(() => {
     const user = firebase.auth().currentUser;
     const email = user.email;
-    console.log(user.uid);
-    console.log(email);
+    //console.log(user.uid);
+    //console.log(email);
     setUser(email);
   }, []);
 

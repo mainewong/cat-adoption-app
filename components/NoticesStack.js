@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CreateScreen from '../screens/CreateScreen';
 import NoticesScreen from '../screens/NoticesScreen';
 import DetailsScreen from '../screens/DetailsScreen';
-// import EditScreen from '../screens/EditScreen';
+import EditScreen from '../screens/EditScreen';
 // import ShowScreen from '../screens/DetailsScreen';
 
 const InnerStack = createStackNavigator();
@@ -34,7 +34,7 @@ export default function NoticesStack() {
       <InnerStack.Screen name="Create" component={CreateScreen}/>
       <InnerStack.Screen name="Details" component={DetailsScreen} options={{ headerShown: true }} />
       {/* <InnerStack.Screen name="Details" component={ShowScreen} options={headerOptions} /> */}
-      {/* <InnerStack.Screen name="Edit" component={EditScreen} options={{ title: "Edit Review", ...headerOptions }} /> */}
+      <InnerStack.Screen name="Edit" component={EditScreen} options={{ title: "Edit Review", ...headerOptions }} /> 
     </InnerStack.Navigator>
    
   )

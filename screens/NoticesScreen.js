@@ -62,32 +62,14 @@ export default function NoticesScreen({ navigation, route }) {
             ...doc.data(),
             id: doc.id,
           }));
-          console.log(data);
+          //console.log(data);
           setMyPosts(data.filter((item) => item.uid === uid));
-          console.log(data.filter((item) => item.uid === uid))
+          //console.log(data.filter((item) => item.uid === uid))
         });
 
       return () => unsubscribe();
     }
   }
-
-  // useEffect(() => {
-  //   const unsubscribe = db.collection("posts").onSnapshot((collection) => {
-  //     const data = collection.docs.map((doc) => {
-  //       const postObject = {
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       };
-  //       //console.log(postObject);
-  //       return postObject;
-  //     });
-  //     setMyPosts(data);
-  //   });
-
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, [user, myPosts]);
 
   function deletePost(id) {
     console.log("Deleting " + id);
