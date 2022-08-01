@@ -7,66 +7,108 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Platform
+  Platform,
+  LayoutAnimation,
+  ActivityIndicator,
 } from "react-native";
 import firebase from "../database/firebaseDB";
 const auth = firebase.auth();
 
 if (
-    Platform.OS === "android" &&
-    UIManager.setLayoutAnimationEnabledExperimental
-  ) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  } //Needs to be manually enabled for android
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+} //Needs to be manually enabled for android
 
 export default function SignInSignUpScreen({ navigation }) {
   //const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorText, setErrorText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isLogIn, setIsLogIn] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   async function login() {
     try {
+      setLoading(true);
       await auth.signInWithEmailAndPassword(email, password);
+      setLoading(false);
       navigation.navigate("Logged In");
     } catch (error) {
+      setLoading(false);
       console.log(error);
       setErrorText(error.message);
     }
   }
 
   async function signUp() {
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      navigation.navigate("Logged In");
-    } catch (error) {
-      console.log(error);
+    if (password != confirmPassword) {
+      setErrorText("Your passwords don't match. Check and try again.");
+    } else {
+      try {
+        setLoading(true);
+        await auth.createUserWithEmailAndPassword(email, password);
+        setLoading(false);
+        navigation.navigate("Logged In");
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     }
   }
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Text style={styles.title}>{isLogIn ? "Log In" : "Sign Up"}</Text>
+      
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
           placeholder="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
         />
       </View>
 
+      {isLogIn ? (
+        <View />
+      ) : (
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password:"
+            secureTextEntry={true}
+            onChangeText={(pw) => setConfirmPassword(pw)}
+          />
+        </View>
+      )}
+
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={login}
-          style={styles.button}
-        >
+      <TouchableOpacity
+            style={styles.button}
+            onPress={isLogIn ? login : signUp}
+          >
+            <Text style={styles.buttonText}>
+              {" "}
+              {isLogIn ? "Log In" : "Sign Up"}{" "}
+            </Text>
+          </TouchableOpacity>
+          <Text style={styles.errorText}>{errorText}</Text>
+          {loading ? (
+            <ActivityIndicator style={{ marginLeft: 10 }} />
+          ) : (
+            <View />
+          )}
+        {/* <TouchableOpacity onPress={login} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <Text style={styles.errorText}>{errorText}</Text>
@@ -75,8 +117,27 @@ export default function SignInSignUpScreen({ navigation }) {
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>Register</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
+
+      <TouchableOpacity
+        onPress={() => {
+          LayoutAnimation.configureNext({
+            duration: 200,
+            create: { type: "linear", property: "opacity" },
+            update: { type: "spring", springDamping: 0.6 },
+          });
+          setIsLogIn(!isLogIn);
+          setErrorText("");
+        }}
+      >
+        <Text style={styles.switchText}>
+          {" "}
+          {isLogIn
+            ? "No account? Sign up now."
+            : "Already have an account? Log in here."}
+        </Text>
+      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 }
@@ -126,4 +187,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
   },
+  errorText: {
+    color: "tomato"
+  },
+  title: {
+    fontSize: 25,
+    marginVertical: 20,
+  }
 });
