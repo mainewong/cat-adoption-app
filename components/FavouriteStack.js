@@ -15,6 +15,7 @@ export default function FavourtieStack() {
           headerTitleStyle: styles.headerTitle, headerLeft: null,
           headerShown: false,
         }} />
+      
        
     </Stack.Navigator>
     )

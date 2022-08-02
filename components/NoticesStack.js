@@ -1,12 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, st} from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
-//import IndexScreen from '../screens/IndexScreen';
 import CreateScreen from '../screens/CreateScreen';
 import NoticesScreen from '../screens/NoticesScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import EditScreen from '../screens/EditScreen';
-// import ShowScreen from '../screens/DetailsScreen';
 
 const InnerStack = createStackNavigator();
 const Stack = createStackNavigator();

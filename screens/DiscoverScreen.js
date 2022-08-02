@@ -1,37 +1,53 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
 import firebase from "../database/firebaseDB";
 import { collection, getDocs } from "firebase/firestore";
+import { Card } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 const auth = firebase.auth();
 
-const db = firebase.firestore()
+const db = firebase.firestore();
 
-export default function DiscoverScreen() {
+export default function DiscoverScreen( {navigation} ) {
   const [allPosts, setAllPosts] = useState([]);
 
   useEffect(() => {
     const unsubscribe = db.collection("posts").onSnapshot((collection) => {
-        const data = collection.docs.map((doc) => {
-          const postObject = {
-            ...doc.data(),
-            id: doc.id,
-          };
-          //console.log(postObject);
-          return postObject;
-        });
-
-        setAllPosts(data);
+      const data = collection.docs.map((doc) => {
+        const postObject = {
+          ...doc.data(),
+          id: doc.id,
+        };
+        //console.log(postObject);
+        return postObject;
       });
 
+      setAllPosts(data);
+    });
+
     return () => {
-      unsubscribe()
-    }
-  }, [])
+      unsubscribe();
+    };
+  }, []);
 
   function renderItem({ item }) {
     return (
+      <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("DiscoverDetails", {
+          id: item.id,
+        })
+      }
+    >
       <View
         style={{
           padding: 10,
@@ -43,18 +59,26 @@ export default function DiscoverScreen() {
           justifyContent: "space-between",
         }}
       >
-        <Text>{item.catName}</Text>
-        <Text>{item.catAge}</Text>
-        <Text>{item.breed}</Text>
-        
+        <Card>
+          <Image
+            style={styles.image}
+            source={{
+              uri: "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
+            }}
+          />
+          <Text>{item.catName}</Text>
+          <View style={{flexDirection:"row"}}>
+            <Text style={{marginRight: 20}}>{item.catAge}</Text>
+            <Text>{item.breed}</Text>
+          </View>
+        </Card>
       </View>
+      </TouchableOpacity>
     );
   }
 
-
   return (
     <View style={stylesheet.container}>
-      
       <FlatList
         data={allPosts}
         renderItem={renderItem}
@@ -62,7 +86,15 @@ export default function DiscoverScreen() {
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const deviceWidth = Math.round(Dimensions.get("window").width);
+
+const styles = StyleSheet.create({
+  image: {
+    justifyContent: "center",
+    width: deviceWidth - 20,
+    height: 150,
+  },
+});

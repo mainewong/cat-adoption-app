@@ -1,9 +1,11 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
 import DiscoverScreen from "../screens/DiscoverScreen";
+import DiscoverDetailsScreen from '../screens/DiscoverDetailsScreen';
 import { StyleSheet, Text, View } from 'react-native';
 
 const Stack = createStackNavigator();
+const InnerStack = createStackNavigator();
 
 export default function DiscoverStack() {
 
@@ -15,7 +17,7 @@ export default function DiscoverStack() {
           headerTitleStyle: styles.headerTitle, headerLeft: null,
           headerShown: false,
         }} />
-       
+    <InnerStack.Screen name="DiscoverDetails" component={DiscoverDetailsScreen} options={{ headerShown: true }} />
     </Stack.Navigator>
     )
   }

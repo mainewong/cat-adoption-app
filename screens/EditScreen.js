@@ -59,6 +59,9 @@ export default function EditScreen({ navigation, route }) {
         catAge: catAge,
         breed: breed,
       });
+      Alert.alert(
+        'Post edited!'
+      )
     navigation.navigate("MyNotices");
   }
 

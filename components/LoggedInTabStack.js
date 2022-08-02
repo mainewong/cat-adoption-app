@@ -28,14 +28,16 @@ export default function LoggedInStack() {
           // You can return any component that you like here!
           return <FontAwesome name={iconName} size={size} color={color} />;
         },
+        tabBaractiveTintColor: '#3F5362',
+        tabBarinactiveTintColor: '#C7B6A6',
       })}
-      tabBarOptions={{
-        activeTintColor: '#3F5362',
-        inactiveTintColor: '#C7B6A6',
+      // screenOptions={{
+      //   tabBaractiveTintColor: '#3F5362',
+      //   tabBarinactiveTintColor: '#C7B6A6',
         // tabStyle: {
         //   backgroundColor: isDark ? "#181818" : "white",
         // }
-      }}
+      
       >
         <Tab.Screen name="Discover" component={DiscoverStack} />
         <Tab.Screen name="My Notices" component={NoticesStack} options= {{headerShown: false }}/>

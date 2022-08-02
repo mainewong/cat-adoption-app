@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
@@ -71,11 +72,15 @@ export default function NoticesScreen({ navigation, route }) {
     }
   }
 
-  function deletePost(id) {
-    console.log("Deleting " + id);
-    // To delete that item, we filter out the item we don't want
-    //setNotes(notes.filter((item) => item.id !== id));
-    db.doc(id).delete();
+  async function deletePost(id) {
+    await db
+      .collection("posts")
+      .doc(id)
+      .delete();
+      Alert.alert(
+        'Post deleted!'
+      )
+    //navigation.navigate("home");
   }
 
   function renderItem({ item }) {
