@@ -18,6 +18,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 export default function DiscoverScreen( {navigation} ) {
+
   const [allPosts, setAllPosts] = useState([]);
 
   useEffect(() => {
@@ -56,19 +57,19 @@ export default function DiscoverScreen( {navigation} ) {
           borderBottomColor: "#ccc",
           borderBottomWidth: 1,
           flexDirection: "row",
+          flexWrap: "wrap",
           justifyContent: "space-between",
         }}
       >
+        
         <Card>
           <Image
             style={styles.image}
-            source={{
-              uri: "https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg",
-            }}
+            source={{ uri: item.image }}
           />
-          <Text>{item.catName}</Text>
-          <View style={{flexDirection:"row"}}>
-            <Text style={{marginRight: 20}}>{item.catAge}</Text>
+          <Text style={stylesheet.label}>{item.catName}</Text>
+          <View style={[stylesheet.label, {flexDirection:"row"}]}>
+            <Text style={{marginRight: 20}}>{(item.catAge) +" year old"}</Text>
             <Text>{item.breed}</Text>
           </View>
         </Card>
@@ -79,12 +80,15 @@ export default function DiscoverScreen( {navigation} ) {
 
   return (
     <View style={stylesheet.container}>
+      <Text style={[stylesheet.title, {marginLeft: 10, marginVertical: 15}]}>Find your next bestfriend</Text>
+      
       <FlatList
         data={allPosts}
         renderItem={renderItem}
         style={{ width: "100%" }}
         keyExtractor={(item) => item.id.toString()}
       />
+      
     </View>
   );
 }

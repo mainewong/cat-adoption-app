@@ -12,12 +12,12 @@ export default function DiscoverStack() {
     return (
     <Stack.Navigator>
       <Stack.Screen component={DiscoverScreen} name="discover" options={{
-          title: "Your Account",
+          title: "Browse",
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle, headerLeft: null,
-          headerShown: false,
+          headerShown: true,
         }} />
-    <InnerStack.Screen name="DiscoverDetails" component={DiscoverDetailsScreen} options={{ headerShown: true }} />
+    <InnerStack.Screen name="DiscoverDetails" component={DiscoverDetailsScreen} options={{ headerShown: true}} />
     </Stack.Navigator>
     )
   }

@@ -27,11 +27,9 @@ export default function NoticesStack() {
           headerShown: true,
         }} />
       
-      {/* <InnerStack.Screen name="Index" component={IndexScreen} options={{ title: "Reviews", ...headerOptions, headerLeft: null }} /> */}
       <InnerStack.Screen name="Add" component={CreateScreen} options={{ title: "Add Review", ...headerOptions }} />
       <InnerStack.Screen name="Create" component={CreateScreen}/>
       <InnerStack.Screen name="Details" component={DetailsScreen} options={{ headerShown: true }} />
-      {/* <InnerStack.Screen name="Details" component={ShowScreen} options={headerOptions} /> */}
       <InnerStack.Screen name="Edit" component={EditScreen} options={{ title: "Edit Review", ...headerOptions }} /> 
     </InnerStack.Navigator>
    

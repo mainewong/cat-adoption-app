@@ -2,7 +2,7 @@ export const stylesheet = {
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "left",
   },
   button: {
     backgroundColor: "#3F5362",
@@ -21,13 +21,18 @@ export const stylesheet = {
   },
   title: {
     fontWeight: "bold",
-    fontSize: 30,
-    //textAlign: 'center',
+    fontSize: 25,
+    textAlign: 'left',
+  },
+  text: {
+    fontWeight: "bold",
+    fontSize: 15,
+    marginVertical: 5,
   },
   button: {
     backgroundColor: "#0782F9",
-    width: "60%",
-    padding: 15,
+    width: "50%",
+    padding: 10,
     borderRadius: 10,
     alignItems: "center",
     marginTop: 40,
@@ -51,9 +56,15 @@ export const stylesheet = {
   label: {
     fontSize: 16,
     marginBottom: 5,
-    marginLeft: 5,
-    marginTop: 10,
+    marginTop: 5,
+    fontWeight: "bold",
   },
+  itemLabel: {
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    marginVertical: 5,
+    marginRight: 100,
+  }
 };
 
 //   export const lightStyles = {

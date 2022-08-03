@@ -5,6 +5,9 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  Card,
+  Image,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
@@ -14,7 +17,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
 const auth = firebase.auth();
 const db = firebase.firestore();
-
 
 export default function NoticesScreen({ navigation, route }) {
   const [myPosts, setMyPosts] = useState([]);
@@ -73,13 +75,8 @@ export default function NoticesScreen({ navigation, route }) {
   }
 
   async function deletePost(id) {
-    await db
-      .collection("posts")
-      .doc(id)
-      .delete();
-      Alert.alert(
-        'Post deleted!'
-      )
+    await db.collection("posts").doc(id).delete();
+    Alert.alert("Post deleted!");
     //navigation.navigate("home");
   }
 
@@ -100,14 +97,23 @@ export default function NoticesScreen({ navigation, route }) {
             borderBottomColor: "#ccc",
             borderBottomWidth: 1,
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
           }}
         >
-          <Text>{item.catName}</Text>
-          <Text>{item.catAge}</Text>
-          <TouchableOpacity onPress={() => deletePost(item.id)}>
-            <Ionicons name="trash" size={16} color="#944" />
-          </TouchableOpacity>
+          <Image style={styles.image} source={{ uri: item.image }} />
+
+          <View style={{ marginLeft: 15 }}>
+            <Text style={stylesheet.label}>{item.catName}</Text>
+            <Text>{(item.catAge) +" year old"}</Text>
+            <Text>{item.breed}</Text>
+            <TouchableOpacity
+            onPress={() => deletePost(item.id)}
+            style={[stylesheet.button, {width: 180}]}
+            >
+              {/* <Ionicons name="trash" size={16} color="#944" /> */}
+              <Text style={stylesheet.buttonText}>Mark as adopted</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -125,4 +131,12 @@ export default function NoticesScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const deviceWidth = Math.round(Dimensions.get("window").width);
+
+const styles = StyleSheet.create({
+  image: {
+    justifyContent: "center",
+    width: 150,
+    height: 150,
+  },
+});
