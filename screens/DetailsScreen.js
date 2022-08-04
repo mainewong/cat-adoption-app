@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
@@ -33,7 +34,7 @@ const DetailsScreen = (props) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image
         style={{
           width: deviceWidth,
@@ -43,7 +44,8 @@ const DetailsScreen = (props) => {
         }}
         source={{ uri: post.image }}
       />
-      <View style={{ margin: 10 }}>
+      <View style={{ margin: 20 }}>
+        
         <Text style={[stylesheet.title, { marginVertical: 20 }]}>
           {post.catName}
         </Text>
@@ -87,7 +89,7 @@ const DetailsScreen = (props) => {
           <Text style={stylesheet.buttonText}>Edit Post</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -98,7 +100,5 @@ const deviceWidth = Math.round(Dimensions.get("window").width);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "left",
-    alignItems: "left",
   },
 });

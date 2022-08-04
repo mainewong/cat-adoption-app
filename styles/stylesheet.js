@@ -3,6 +3,7 @@ export const stylesheet = {
     flex: 1,
     justifyContent: "center",
     alignItems: "left",
+    backgroundColor: "white",
   },
   button: {
     backgroundColor: "#3F5362",
@@ -22,7 +23,7 @@ export const stylesheet = {
   title: {
     fontWeight: "bold",
     fontSize: 25,
-    textAlign: 'left',
+    textAlign: "left",
   },
   text: {
     fontWeight: "bold",
@@ -64,7 +65,20 @@ export const stylesheet = {
     textTransform: "uppercase",
     marginVertical: 5,
     marginRight: 100,
-  }
+  },
+  roundButton: {
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 70,
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    height: 70,
+    backgroundColor: "#fff",
+    borderRadius: 100,
+  },
 };
 
 //   export const lightStyles = {
