@@ -11,8 +11,10 @@ import {
   LayoutAnimation,
   ActivityIndicator,
 } from "react-native";
+//import auth from '@react-native-firebase/auth';
 import firebase from "../database/firebaseDB";
 const auth = firebase.auth();
+const db = firebase.firestore();
 
 if (
   Platform.OS === "android" &&
@@ -49,7 +51,20 @@ export default function SignInSignUpScreen({ navigation }) {
     } else {
       try {
         setLoading(true);
-        await auth.createUserWithEmailAndPassword(email, password);
+        await auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          db.collection('users').doc(auth.currentUser.uid)
+          .set({
+            username: '',
+            age: '',
+            email: email,
+            created: firebase.firestore.FieldValue.serverTimestamp(),
+            userImg: null,
+          })
+        .catch(error => {
+          console.log('something went wrong with added user to firebase')
+          })
+        })
         setLoading(false);
         navigation.navigate("Logged In");
       } catch (error) {
@@ -108,16 +123,6 @@ export default function SignInSignUpScreen({ navigation }) {
           ) : (
             <View />
           )}
-        {/* <TouchableOpacity onPress={login} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <Text style={styles.errorText}>{errorText}</Text>
-        <TouchableOpacity
-          onPress={signUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>Register</Text>
-        </TouchableOpacity> */}
       </View>
 
       <TouchableOpacity
