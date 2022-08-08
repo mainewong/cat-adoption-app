@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import ImageUploader from "../components/ImageUploader";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
+import uuid from 'react-native-uuid'
 
 const db = firebase.firestore().collection("posts");
 
@@ -63,7 +64,10 @@ export default function CreateScreen({ navigation, props }) {
       xhr.send(null);
     });
 
-    const ref = firebase.storage().ref().child(new Date().toISOString());
+    const ref = firebase
+    .storage()
+    .ref()
+    .child(new Date().toISOString());
     const snapshot = ref.put(blob);
 
     snapshot.on(
