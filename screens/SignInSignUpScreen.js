@@ -52,19 +52,22 @@ export default function SignInSignUpScreen({ navigation }) {
       try {
         setLoading(true);
         await auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          db.collection('users').doc(auth.currentUser.uid)
+        .then(credential => {
+          if (credential && credential.user) {
+          //db.collection('users').doc(auth.currentUser.uid)
+          db.collection('users').doc(credential.user.uid)
           .set({
+            uid: credential.user.uid,
+            email: email,
             username: '',
             age: '',
-            email: email,
-            created: firebase.firestore.FieldValue.serverTimestamp(),
+            created: firebase.firestore.Timestamp.now(),
             userImg: null,
           })
         .catch(error => {
           console.log('something went wrong with added user to firebase')
           })
-        })
+        }})
         setLoading(false);
         navigation.navigate("Logged In");
       } catch (error) {

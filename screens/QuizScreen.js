@@ -2,14 +2,14 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { stylesheet } from "../styles/stylesheet";
 
-const FavouriteScreen = () => {
+const QuizScreen = () => {
   return (
     <View style={stylesheet.container}>
-      <Text style={stylesheet.title}>My Favourites</Text>
+      <Text style={stylesheet.title}>My Quiz</Text>
     </View>
   )
 }
 
-export default FavouriteScreen
+export default QuizScreen
 
 const styles = StyleSheet.create({})

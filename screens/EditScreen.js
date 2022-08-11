@@ -22,6 +22,7 @@ export default function EditScreen({ navigation, route }) {
   const [catAge, setCatAge] = useState("");
   const [breed, setBreed] = useState("");
   const [postId, setPostId] = useState("");
+  const [postData, setPostData] = useState(null);
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
 
@@ -105,31 +106,32 @@ export default function EditScreen({ navigation, route }) {
         snapshot.snapshot.ref.getDownloadURL().then((url) => {
           setUploading(false);
           console.log("download url: ", url);
+
+          const editedPost = firebase
+            .firestore()
+            .collection("posts")
+            .doc(postId)
+            .update({
+              catName: catName,
+              catAge: catAge,
+              breed: breed,
+              image: url,
+            });
+          Alert.alert("Post edited!");
+          navigation.navigate("MyNotices");
+
           blob.close();
           return url;
         });
       }
     );
-
-    const editedPost = await firebase
-      .firestore()
-      .collection("posts")
-      .doc(postId)
-      .update({
-        catName: catName,
-        catAge: catAge,
-        breed: breed,
-        image: image,
-      });
-    Alert.alert("Post edited!");
-    navigation.navigate("MyNotices");
   }
 
   return (
     <KeyboardAwareScrollView>
       <View style={imageUploaderStyles.container}>
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      
+
         <View style={imageUploaderStyles.uploadBtnContainer}>
           <TouchableOpacity
             onPress={pickImage}

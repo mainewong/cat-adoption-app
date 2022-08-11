@@ -18,6 +18,7 @@ const DetailsScreen = (props) => {
   const navigation = useNavigation();
   //const route = useRoute();
 
+  //const [post, setPost] = useState({ catName: "", catAge: "" });
   const [post, setPost] = useState({ catName: "", catAge: "" });
   const getPostById = async (id) => {
     const dbRef = db.collection("posts").doc(id);

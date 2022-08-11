@@ -51,6 +51,9 @@ export default function CreateScreen({ navigation, props }) {
 
   // Monitor route.params for changes and add items to the database
   async function savePost() {
+
+    //const imageUri = await url;
+
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -68,7 +71,7 @@ export default function CreateScreen({ navigation, props }) {
     .storage()
     .ref()
     .child(new Date().toISOString());
-    const snapshot = ref.put(blob);
+    const snapshot = ref.put(blob); 
 
     snapshot.on(
       firebase.storage.TaskEvent.STATE_CHANGED,
@@ -85,23 +88,24 @@ export default function CreateScreen({ navigation, props }) {
         snapshot.snapshot.ref.getDownloadURL().then((url) => {
           setUploading(false);
           console.log("download url: ", url);
+
+          const newPost = {
+            uid: user,
+            catName: catName,
+            catAge: catAge,
+            breed: breed,
+            image: url,
+            created: firebase.firestore.Timestamp.now(),
+          };
+          db.add(newPost);
+          Alert.alert("Post published!");
+          navigation.navigate("MyNotices");
+
           blob.close();
           return url;
         });
       }
     );
-
-    const newPost = {
-      uid: user,
-      catName: catName,
-      catAge: catAge,
-      breed: breed,
-      image: image,
-      created: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-    db.add(newPost);
-    Alert.alert("Post published!");
-    navigation.navigate("MyNotices");
   }
 
   return (

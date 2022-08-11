@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DiscoverStack from '../components/DiscoverStack';
 import NoticesStack from '../components/NoticesStack';
-import FavouriteStack from '../components/FavouriteStack';
+import QuizStack from './QuizStack';
 import ProfileStack from '../components/ProfileStack';
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -20,8 +20,8 @@ export default function LoggedInStack() {
             iconName = "paw" 
           } else if (route.name === 'My Notices') {
             iconName = "newspaper-o"
-          } else if (route.name === 'Favourite') {
-            iconName = "heart"
+          } else if (route.name === 'Quiz') {
+            iconName = "lightbulb-o"
           } else if (route.name === 'Profile') {
             iconName = "user"
           }
@@ -41,7 +41,7 @@ export default function LoggedInStack() {
       >
         <Tab.Screen name="Discover" component={DiscoverStack} options= {{headerShown: false }}/>
         <Tab.Screen name="My Notices" component={NoticesStack} options= {{headerShown: false }}/>
-        <Tab.Screen name="Favourite" component={FavouriteStack} /> 
+        <Tab.Screen name="Quiz" component={QuizStack} /> 
         <Tab.Screen name="Profile" component={ProfileStack} options= {{headerShown: false }} />
     </Tab.Navigator>
   )
