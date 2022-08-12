@@ -31,7 +31,9 @@ import { get } from "react-native/Libraries/Utilities/PixelRatio";
 console.disableYellowBox = true;
 
 export default function EditProfileScreen({ navigation, route }) {
-  const [userImg, setUserImg] = useState("");
+  //const [userImg, setUserImg] = useState("");
+  const [userImg, setUserImg] = useState(route.params.userImg);
+  const [profile, setProfile] = useState({});
   const [uploading, setUploading] = useState(false);
   const [userData, setUserData] = useState(null);
   const user = firebase.auth().currentUser;
@@ -88,8 +90,8 @@ export default function EditProfileScreen({ navigation, route }) {
           setUploading(false);
           console.log("download url: ", url);
 
-          if( url == null && userData.userImg ) {
-            url = userData.userImg;
+          if( url == null && userImg ) {
+            url = userImg;
           }
 
           const editedProfile = firebase
@@ -130,9 +132,17 @@ export default function EditProfileScreen({ navigation, route }) {
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>
       <View style={imageUploaderStyles.container}>
-        <Image
+        {/* <Image
         source={{ uri: userImg }} style={{ width: 200, height: 200 }}
-        />
+        /> */}
+        <Text>
+        {userImg && (
+          <Image
+          source={{ ...profile, uri: userImg }}
+            style={{ width: "100%", height: "100%" }}
+          />
+        )}
+        </Text>
 
         <View style={imageUploaderStyles.uploadBtnContainer}>
           <TouchableOpacity

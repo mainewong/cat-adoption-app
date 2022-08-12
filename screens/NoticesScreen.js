@@ -75,7 +75,17 @@ export default function NoticesScreen({ navigation, route }) {
   }
 
   async function deletePost(id) {
-    await db.collection("posts").doc(id).delete();
+    await db.collection("posts").doc(id).delete()
+    
+    // var desertRef = storageRef.child("image");
+
+    // // Delete the file
+    // desertRef.delete().then(() => {
+    //   // File deleted successfully
+    // }).catch((error) => {
+    //   // Uh-oh, an error occurred!
+    // });
+
     Alert.alert("Post deleted!");
     //navigation.navigate("home");
   }
@@ -104,11 +114,11 @@ export default function NoticesScreen({ navigation, route }) {
 
           <View style={{ marginLeft: 15 }}>
             <Text style={stylesheet.label}>{item.catName}</Text>
-            <Text>{(item.catAge) +" year old"}</Text>
+            <Text>{item.catAge + " year old"}</Text>
             <Text>{item.breed}</Text>
             <TouchableOpacity
-            onPress={() => deletePost(item.id)}
-            style={[stylesheet.button, {width: 180}]}
+              onPress={() => deletePost(item.id)}
+              style={[stylesheet.button, { width: 180 }]}
             >
               {/* <Ionicons name="trash" size={16} color="#944" /> */}
               <Text style={stylesheet.buttonText}>Mark as adopted</Text>

@@ -41,7 +41,7 @@ export default function LoggedInStack() {
       >
         <Tab.Screen name="Discover" component={DiscoverStack} options= {{headerShown: false }}/>
         <Tab.Screen name="My Notices" component={NoticesStack} options= {{headerShown: false }}/>
-        <Tab.Screen name="Quiz" component={QuizStack} /> 
+        <Tab.Screen name="Quiz" component={QuizStack} options= {{headerShown: false }} /> 
         <Tab.Screen name="Profile" component={ProfileStack} options= {{headerShown: false }} />
     </Tab.Navigator>
   )

@@ -20,6 +20,7 @@ const db = firebase.firestore();
 export default function DiscoverScreen( {navigation} ) {
 
   const [allPosts, setAllPosts] = useState([]);
+  const [userInfo, setuserInfo] = useState([]);
 
   useEffect(() => {
     const unsubscribe = db.collection("posts").onSnapshot((collection) => {
