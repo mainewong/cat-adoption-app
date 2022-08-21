@@ -51,7 +51,7 @@ export default function NoticesScreen({ navigation, route }) {
         </TouchableOpacity>
       ),
     });
-  });
+  }, []);
 
   async function getData() {
     const user = firebase.auth().currentUser;
@@ -75,18 +75,20 @@ export default function NoticesScreen({ navigation, route }) {
   }
 
   async function deletePost(id) {
+    const currentDoc = await db.collection("posts").doc(id).get()
+    const imageId = currentDoc.data().imageId
     await db.collection("posts").doc(id).delete()
     
-    // var desertRef = storageRef.child("image");
+    var desertRef = storageRef.child(imageId + ".png");
 
-    // // Delete the file
-    // desertRef.delete().then(() => {
-    //   // File deleted successfully
-    // }).catch((error) => {
-    //   // Uh-oh, an error occurred!
-    // });
+    // Delete the file
+    desertRef.delete().then(() => {
+      Alert.alert("Post deleted!");
+    }).catch((error) => {
+      // Uh-oh, an error occurred!
+    });
 
-    Alert.alert("Post deleted!");
+    
     //navigation.navigate("home");
   }
 

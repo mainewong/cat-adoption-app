@@ -13,6 +13,8 @@ import { stylesheet } from "../styles/stylesheet";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
+import uuid from "react-native-uuid";
+import SelectDropdown from "react-native-select-dropdown";
 
 const db = firebase.firestore();
 
@@ -21,9 +23,14 @@ export default function EditScreen({ navigation, route }) {
   const [catName, setCatName] = useState("");
   const [catAge, setCatAge] = useState("");
   const [breed, setBreed] = useState("");
+  const [gender, setGender] = useState("");
+  const [about, setAbout] = useState("");
   const [postId, setPostId] = useState("");
   const [postData, setPostData] = useState(null);
   const [image, setImage] = useState("");
+  const [vaccinationStatus, setVaccinationStatus] = useState("");
+  const [sterilizeStatus, setSterilizeStatus] = useState("");
+  const [imageId, setImageId] = useState(uuid.v4());
   const [uploading, setUploading] = useState(false);
 
   function getDetails() {
@@ -31,12 +38,20 @@ export default function EditScreen({ navigation, route }) {
     const catName = route.params.post.catName;
     const catAge = route.params.post.catAge;
     const breed = route.params.post.breed;
+    const gender = route.params.post.gender;
+    const about = route.params.post.about;
     const image = route.params.post.image;
+    const vaccinationStatus = route.params.post.vaccinationStatus;
+    const sterilizeStatus = route.params.post.sterilizeStatus;
     setPostId(postId);
     setCatName(catName);
     setCatAge(catAge);
+    setAbout(about);
+    setGender(gender);
     setBreed(breed);
     setImage(image);
+    setVaccinationStatus(vaccinationStatus);
+    setSterilizeStatus(sterilizeStatus);
   }
 
   useEffect(() => {
@@ -75,6 +90,7 @@ export default function EditScreen({ navigation, route }) {
   };
 
   async function updatePost() {
+
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -87,8 +103,8 @@ export default function EditScreen({ navigation, route }) {
       xhr.open("GET", image, true);
       xhr.send(null);
     });
-
-    const ref = firebase.storage().ref().child(new Date().toISOString());
+    
+    const ref = firebase.storage().ref().child(imageId + ".png");
     const snapshot = ref.put(blob);
 
     snapshot.on(
@@ -112,10 +128,15 @@ export default function EditScreen({ navigation, route }) {
             .collection("posts")
             .doc(postId)
             .update({
-              catName: catName,
-              catAge: catAge,
-              breed: breed,
+              catName,
+              catAge,
+              breed,
+              gender,
+              about,
+              vaccinationStatus,
+              sterilizeStatus,
               image: url,
+              imageId,
             });
           Alert.alert("Post edited!");
           navigation.navigate("MyNotices");
@@ -125,12 +146,15 @@ export default function EditScreen({ navigation, route }) {
         });
       }
     );
+
+    
+
   }
 
   return (
     <KeyboardAwareScrollView>
       <View style={imageUploaderStyles.container}>
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+        <Image source={{ uri: image }} style={{ width: 180, height: 180 }} />
 
         <View style={imageUploaderStyles.uploadBtnContainer}>
           <TouchableOpacity
@@ -144,7 +168,93 @@ export default function EditScreen({ navigation, route }) {
       </View>
 
       <View style={{ margin: 20 }}>
-        <Text style={[stylesheet.label, styles.text]}>Name</Text>
+        {/* BASIC INFO */}
+        <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>
+            BASIC INFO
+          </Text>
+          <Text style={[stylesheet.label, styles.text]}>Name</Text>
+          <TextInput
+            style={stylesheet.input}
+            placeholder="Name"
+            value={catName}
+            onChangeText={(input) => setCatName(input)}
+          />
+          <Text style={[stylesheet.label, styles.text]}>Age</Text>
+          <TextInput
+            placeholder="Age"
+            style={stylesheet.input}
+            value={catAge}
+            onChangeText={(input) => setCatAge(input)}
+          />
+          <Text style={[stylesheet.label, styles.text]}>Breed</Text>
+          <TextInput
+            style={stylesheet.input}
+            placeholder="Breed"
+            value={breed}
+            onChangeText={(input) => setBreed(input)}
+          />
+          <Text style={[stylesheet.label, styles.text]}>Gender</Text>
+          <SelectDropdown
+            buttonStyle={stylesheet.dropdown1BtnStyle}
+            data={["Male", "Female"]}
+            onSelect={(selectedItem, index) => {
+              setGender(selectedItem);
+              console.log(selectedItem, index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+          />
+          <Text style={[stylesheet.label, styles.text]}>About the cat</Text>
+          <TextInput
+            multiline
+            numberOfLines={3}
+            style={[stylesheet.input, { height: 65 }]}
+            placeholder="Character, temperament etc."
+            value={about}
+            onChangeText={(input) => setAbout(input)}
+            autoCorrect={true}
+          />
+
+          {/* HEALTH  */}
+          <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>HEALTH</Text>
+          <Text style={[stylesheet.label, styles.text]}>
+            Vaccination Status
+          </Text>
+          <SelectDropdown
+            buttonStyle={stylesheet.dropdown1BtnStyle}
+            data={["Vaccinated", "Non-vaccinated"]}
+            onSelect={(selectedItem, index) => {
+              setVaccinationStatus(selectedItem);
+              console.log(selectedItem, index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+          />
+
+          <Text style={[stylesheet.label, styles.text]}>Sterilized</Text>
+          <SelectDropdown
+            buttonStyle={stylesheet.dropdown1BtnStyle}
+            data={["Sterilized", "Non-Sterilized"]}
+            onSelect={(selectedItem, index) => {
+              setSterilizeStatus(selectedItem);
+              console.log(selectedItem, index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+          />
+        {/* <Text style={[stylesheet.label, styles.text]}>Name</Text>
         <TextInput
           style={stylesheet.input}
           value={catName}
@@ -161,7 +271,7 @@ export default function EditScreen({ navigation, route }) {
           style={stylesheet.input}
           value={breed}
           onChangeText={(input) => setBreed(input)}
-        />
+        /> */}
         <TouchableOpacity style={stylesheet.button} onPress={updatePost}>
           <Text style={stylesheet.buttonText}>Save</Text>
         </TouchableOpacity>
@@ -175,8 +285,8 @@ const styles = StyleSheet.create({});
 const imageUploaderStyles = StyleSheet.create({
   container: {
     elevation: 2,
-    height: 200,
-    width: 200,
+    height: 180,
+    width: 180,
     backgroundColor: "#efefef",
     position: "relative",
     borderRadius: 10,

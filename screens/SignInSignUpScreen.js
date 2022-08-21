@@ -13,7 +13,7 @@ import {
 } from "react-native";
 //import auth from '@react-native-firebase/auth';
 import firebase from "../database/firebaseDB";
-const auth = firebase.auth();
+import { auth } from "../database/firebaseDB";
 const db = firebase.firestore();
 
 if (

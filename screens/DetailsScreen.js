@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  Card,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
@@ -36,48 +37,54 @@ const DetailsScreen = (props) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Image
-        style={{
-          width: deviceWidth,
-          height: 350,
-          alignSelf: "center",
-          borderRadius: 0,
-        }}
-        source={{ uri: post.image }}
-      />
-      <View style={{ margin: 20 }}>
-        
-        <Text style={[stylesheet.title, { marginVertical: 20 }]}>
+      <View style={[stylesheet.myCard, stylesheet.shadowProp]}>
+        <Image
+          style={{
+            width: deviceWidth - 80,
+            height: 300,
+            alignSelf: "center",
+            borderRadius: 5,
+          }}
+          source={{ uri: post.image }}
+        />
+        <Text
+          style={[stylesheet.title, { marginTop: 20, textAlign: "center" }]}
+        >
           {post.catName}
         </Text>
+      </View>
+
+      <View style={{ margin: 20 }}>
         <View style={{ flexDirection: "row", marginBottom: 20 }}>
           <View>
             <Text style={stylesheet.itemLabel}>Gender</Text>
-            <Text>xxx</Text>
+            <Text>{post.gender}</Text>
           </View>
-          <View>
+          <View style={{ position: "absolute", left: 170 }}>
             <Text style={stylesheet.itemLabel}>Age</Text>
             <Text>{post.catAge + " year old"}</Text>
           </View>
         </View>
+
         <View style={{ flexDirection: "row", marginBottom: 20 }}>
           <View>
             <Text style={stylesheet.itemLabel}>Breed</Text>
             <Text>{post.breed}</Text>
           </View>
-          <View>
-            <Text style={stylesheet.itemLabel}>Health</Text>
-            <Text>xxx</Text>
-          </View>
         </View>
-
-        <View style={{ marginBottom: 20 }}>
-          <Text style={stylesheet.itemLabel}>Sterilized</Text>
-          <Text>xxx</Text>
+        <View style={{ flexDirection: "row", marginBottom: 20 }}>
+          <View>
+            <Text style={stylesheet.itemLabel}>Sterilization</Text>
+            <Text>{post.sterilizeStatus}</Text>
+          </View>
+          <View style={{ position: "absolute", left: 170 }}>
+            <Text style={stylesheet.itemLabel}>Vaccination</Text>
+            <Text>{post.vaccinationStatus}</Text>
+          </View>
         </View>
         <View>
           <Text style={stylesheet.itemLabel}>About Me</Text>
-          <Text>xxx</Text>
+          <Text>{post.about}</Text>
         </View>
 
         <TouchableOpacity
@@ -101,5 +108,10 @@ const deviceWidth = Math.round(Dimensions.get("window").width);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  image: {
+    justifyContent: "center",
+    width: deviceWidth - 20,
+    height: 150,
   },
 });

@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
 import DiscoverScreen from "../screens/DiscoverScreen";
 import DiscoverDetailsScreen from '../screens/DiscoverDetailsScreen';
+import ApplyScreen from '../screens/ApplyScreen';
 import { StyleSheet, Text, View } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -18,6 +19,7 @@ export default function DiscoverStack() {
           headerShown: true,
         }} />
     <InnerStack.Screen name="DiscoverDetails" component={DiscoverDetailsScreen} options={{ headerShown: true}} />
+    <InnerStack.Screen name="ApplyScreen" component={ApplyScreen} options={{ headerShown: true}} />
     </Stack.Navigator>
     )
   }

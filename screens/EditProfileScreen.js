@@ -32,7 +32,7 @@ console.disableYellowBox = true;
 
 export default function EditProfileScreen({ navigation, route }) {
   //const [userImg, setUserImg] = useState("");
-  const [userImg, setUserImg] = useState(route.params.userImg);
+  const [userImg, setUserImg] = useState("");
   const [profile, setProfile] = useState({});
   const [uploading, setUploading] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -136,10 +136,12 @@ export default function EditProfileScreen({ navigation, route }) {
         source={{ uri: userImg }} style={{ width: 200, height: 200 }}
         /> */}
         <Text>
-        {userImg && (
+        {userData && (
           <Image
-          source={{ ...profile, uri: userImg }}
-            style={{ width: "100%", height: "100%" }}
+          source={{
+            uri: userData.userImg,
+          }}
+            style={{ width: 100, height: 100 }}
           />
         )}
         </Text>
@@ -149,7 +151,7 @@ export default function EditProfileScreen({ navigation, route }) {
             onPress={pickImage}
             style={imageUploaderStyles.uploadBtn}
           >
-            <Text>{userImg ? "Edit" : "Upload"} User</Text>
+            <Text>{userData ? "Edit" : "Upload"} User</Text>
             <AntDesign name="camera" size={20} color="black" />
           </TouchableOpacity>
         </View>
