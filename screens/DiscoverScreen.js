@@ -93,7 +93,8 @@ export default function DiscoverScreen({ navigation }) {
   }
 
   function renderItem({ item }) {
-    const postDate = moment(item.created.toDate()).startOf("hour").fromNow();
+    //const postDate = moment(item.created.toDate()).startOf("hour").fromNow();
+    const postDate = moment(item.created.toDate()).startOf("min").fromNow();
 
     //checking if the current user has liked the article or not to change icon
     const postLikesUid = item.postLikedBy;
@@ -132,12 +133,19 @@ export default function DiscoverScreen({ navigation }) {
                 <Text>
                   <Image
                     style={styles.userIcon}
-                    source={require("../assets/user.jpg")}
+                    //source={require("../assets/user.jpg")}
+                   // source={{ uri: item.userImg }}
+                   source={{
+                    uri: item
+                      ? item.userImg ||
+                        "https://m.medigatenews.com/resources/img/add_user.png"
+                      : "https://m.medigatenews.com/resources/img/add_user.png",
+                  }}
                   />
                 </Text>
               </View>
               <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
-                <Text>User</Text>
+                <Text>{item.username}</Text>
               </View>
             </View>
             <Image style={styles.image} source={{ uri: item.image }} />

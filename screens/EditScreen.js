@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import uuid from "react-native-uuid";
 import SelectDropdown from "react-native-select-dropdown";
+import { getCatBreed } from "../api/CatBreedApi";
 
 const db = firebase.firestore();
 
@@ -31,6 +32,7 @@ export default function EditScreen({ navigation, route }) {
   const [vaccinationStatus, setVaccinationStatus] = useState("");
   const [sterilizeStatus, setSterilizeStatus] = useState("");
   const [imageId, setImageId] = useState(uuid.v4());
+  const [breedList, setBreedList] = useState([])
   const [uploading, setUploading] = useState(false);
 
   function getDetails() {
@@ -146,10 +148,17 @@ export default function EditScreen({ navigation, route }) {
         });
       }
     );
-
-    
-
   }
+
+  async function getCat(){
+    const res = await getCatBreed(breed);
+    setBreedList(res);
+    console.log(res);
+  }
+
+  useEffect(() => {
+   getCat()
+  }, []);
 
   return (
     <KeyboardAwareScrollView>
@@ -187,11 +196,19 @@ export default function EditScreen({ navigation, route }) {
             onChangeText={(input) => setCatAge(input)}
           />
           <Text style={[stylesheet.label, styles.text]}>Breed</Text>
-          <TextInput
-            style={stylesheet.input}
-            placeholder="Breed"
-            value={breed}
-            onChangeText={(input) => setBreed(input)}
+          <SelectDropdown
+            buttonStyle={stylesheet.dropdown1BtnStyle}
+            data={breedList}
+            onSelect={(selectedItem, index) => {
+              setBreed(selectedItem)
+              console.log(selectedItem, index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
           />
           <Text style={[stylesheet.label, styles.text]}>Gender</Text>
           <SelectDropdown

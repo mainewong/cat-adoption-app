@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/core";
+import { COLORS } from "../constants/theme";
 import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -10,6 +11,7 @@ import {
   Platform,
   LayoutAnimation,
   ActivityIndicator,
+  Image,
 } from "react-native";
 //import auth from '@react-native-firebase/auth';
 import firebase from "../database/firebaseDB";
@@ -146,6 +148,10 @@ export default function SignInSignUpScreen({ navigation }) {
             : "Already have an account? Log in here."}
         </Text>
       </TouchableOpacity>
+      <Image
+              source={require("../assets/signinsignup.png")}
+              style={styles.signinImg}
+            />
     </KeyboardAvoidingView>
   );
 }
@@ -154,17 +160,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
+    paddingHorizontal: 30,
+    backgroundColor: COLORS.darkbeige,
   },
   inputContainer: {
-    width: "80%",
+    width: "100%",
   },
   input: {
+    color: COLORS.purple,
     backgroundColor: "white",
     paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
+    paddingVertical: 12,
+    borderRadius: 5,
+    marginTop: 8,
   },
   buttonContainer: {
     width: "60%",
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: COLORS.red,
     width: "100%",
     padding: 15,
     borderRadius: 10,
@@ -199,7 +208,20 @@ const styles = StyleSheet.create({
     color: "tomato"
   },
   title: {
+    color: COLORS.red,
+    fontWeight: "700",
     fontSize: 25,
     marginVertical: 20,
+  },
+  signinImg: {
+    width: 230,
+    height: 250, 
+    position: "absolute",
+    right: 0,
+    bottom: -20,
+  },
+  switchText: {
+    color: COLORS.purple,
+    fontWeight: "700",
   }
 });

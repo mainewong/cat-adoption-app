@@ -13,9 +13,17 @@ import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import firebase from "../database/firebaseDB";
+import { auth } from "../database/firebaseDB";
 const db = firebase.firestore();
 
+
+
 const DiscoverDetailsScreen = (props) => {
+ 
+  const current = firebase.auth().currentUser;
+  const userID = current.uid
+  console.log(userID + "userID");
+
   const navigation = useNavigation();
   //const route = useRoute();
 
@@ -33,6 +41,9 @@ const DiscoverDetailsScreen = (props) => {
   useEffect(() => {
     getPostById(props.route.params.id);
   }, []);
+
+  const postedBy = post.uid
+  //console.log(postedBy)
 
   return (
     <ScrollView style={styles.container}>
@@ -73,7 +84,11 @@ const DiscoverDetailsScreen = (props) => {
           <View style={{ flexDirection: "row", marginBottom: 20 }}>
             <View>
               <Text style={stylesheet.itemLabel}>Breed</Text>
-              <Text>{post.breed}</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("BreedInfo", { post: post })}
+              >
+                <Text>{post.breed}</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{ flexDirection: "row", marginBottom: 20 }}>
@@ -91,12 +106,21 @@ const DiscoverDetailsScreen = (props) => {
             <Text>{post.about}</Text>
           </View>
 
-          <TouchableOpacity
-            style={stylesheet.roundButton}
-            onPress={() => navigation.navigate("ApplyScreen", { post: post })}
-          >
-            <Text>Adopt</Text>
-          </TouchableOpacity>
+          <View>
+            <Text style={stylesheet.itemLabel}>Owner</Text>
+            <Text>{post.username}</Text>
+            <Text>{post.uid}</Text>
+          </View>
+
+          {userID == postedBy ? 
+            null : (
+            <TouchableOpacity
+              style={stylesheet.roundButton}
+              onPress={() => navigation.navigate("ApplyScreen", { post: post })}
+            >
+              <Text>Adopt</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScrollView>

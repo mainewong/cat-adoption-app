@@ -1,9 +1,11 @@
+import { COLORS } from "../constants/theme";
+
 export const stylesheet = {
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "left",
-    backgroundColor: "white",
+    backgroundColor: COLORS.lightbeige,
   },
   title: {
     fontWeight: "bold",
@@ -16,23 +18,39 @@ export const stylesheet = {
     marginVertical: 5,
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: "#EE574E",
     width: "100%",
     padding: 10,
     paddingHorizontal: 30,
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 20,
   },
   buttonText: {
     color: "white",
-    fontWeight: "700",
+    fontWeight: "500",
+    fontSize: 16,
+  },
+  outlineButton: {
+    backgroundColor: "none",
+    borderWidth: 2,
+    borderColor: "#EE574E",
+    width: "100%",
+    padding: 8,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  outlineButtonText: {
+    color: "#EE574E",
+    fontWeight: "500",
     fontSize: 16,
   },
   input: {
     fontSize: 16,
     backgroundColor: "white",
-    borderColor: "lightgrey",
+    borderColor: COLORS.darkbeige,
     borderWidth: 1,
     borderRadius: 2,
     marginBottom: 0,

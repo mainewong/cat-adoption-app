@@ -11,7 +11,14 @@ export const COLORS = {
 
     black: "#171717",
     white: "#FFFFFF",
-    background: "#252C4A"
+    background: "#252C4A",
+
+    lightbeige: "#FFF9F3",
+    darkbeige: "#F9EBDC",
+    red: "#EE574E",
+    blue: "#7598DA",
+    purple: "#453854",
+    orange: "#F46831",
 }
 
 export const SIZES = {

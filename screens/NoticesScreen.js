@@ -3,6 +3,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Modal,
   FlatList,
   Alert,
   Card,
@@ -21,6 +22,7 @@ const db = firebase.firestore();
 export default function NoticesScreen({ navigation, route }) {
   const [myPosts, setMyPosts] = useState([]);
   const [user, setUser] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     console.log("Setting up nav listener");
@@ -74,11 +76,20 @@ export default function NoticesScreen({ navigation, route }) {
     }
   }
 
+  async function showDeleteModal() {
+    setDeleteModal(true);
+  }
+
+  const closeModal = () => {
+    setDeleteModal(false);
+    navigation.navigate("Notices");
+  };
+
   async function deletePost(id) {
     const currentDoc = await db.collection("posts").doc(id).get()
     const imageId = currentDoc.data().imageId
     await db.collection("posts").doc(id).delete()
-    
+    Alert.alert("Marked as adopted!")
     var desertRef = storageRef.child(imageId + ".png");
 
     // Delete the file
@@ -119,11 +130,55 @@ export default function NoticesScreen({ navigation, route }) {
             <Text>{item.catAge + " year old"}</Text>
             <Text>{item.breed}</Text>
             <TouchableOpacity
+              onPress={showDeleteModal}
+              style={[stylesheet.button, { width: 180 }]}
+            >
+              {/* <Ionicons name="trash" size={16} color="#944" /> */}
+              <Text style={stylesheet.buttonText}>Mark as adopted</Text>
+              <Modal
+          animationType="slide"
+          transparent={true}
+          visible={deleteModal}
+        >
+          <View
+            style={{
+              flex: 1,
+              background: "white",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "lightgrey",
+                width: "90%",
+                borderRadius: 20,
+                padding: 30,
+                alignItems: "center",
+              }}
+            >
+              <Text style={stylesheet.label}>Confirm mark as adopted?</Text>
+              <TouchableOpacity
               onPress={() => deletePost(item.id)}
               style={[stylesheet.button, { width: 180 }]}
             >
               {/* <Ionicons name="trash" size={16} color="#944" /> */}
               <Text style={stylesheet.buttonText}>Mark as adopted</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[stylesheet.button, { width: "80%" }]}>
+                <Text
+                  style={stylesheet.buttonText}
+                  onPress={() => {
+                    closeModal();
+                  }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
             </TouchableOpacity>
           </View>
         </View>
@@ -140,6 +195,7 @@ export default function NoticesScreen({ navigation, route }) {
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
+    
   );
 }
 

@@ -8,7 +8,7 @@ import LoggedInTabStack from "./components/LoggedInTabStack";
 import OnboardingScreen from './screens/OnboardingScreen';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { COLORS } from './constants/theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,14 +55,13 @@ export default function App() {
     );
     
   }
-
   
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.lightbeige,
     alignItems: 'center',
     justifyContent: 'center',
   },

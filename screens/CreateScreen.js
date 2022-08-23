@@ -18,6 +18,8 @@ import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import uuid from "react-native-uuid";
 import SelectDropdown from "react-native-select-dropdown";
+import { getCatBreed } from "../api/CatBreedApi";
+import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 const db = firebase.firestore().collection("posts");
 
@@ -29,11 +31,15 @@ export default function CreateScreen({ navigation, props }) {
   const [gender, setGender] = useState("");
   const [about, setAbout] = useState("");
   const [image, setImage] = useState("");
-  const [postLikedBy, setPostLikedBy] = useState([]);
   const [vaccinationStatus, setVaccinationStatus] = useState("");
   const [sterilizeStatus, setSterilizeStatus] = useState("");
   const [imageId, setImageId] = useState(uuid.v4());
   const [uploading, setUploading] = useState(false);
+  const [postLikedBy, setPostLikedBy] = useState([]);
+  const [postAppliedBy, setPostAppliedBy] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [breedList, setBreedList] = useState([])
+  // const [breedId, setBreedId] = useState("")
 
   useEffect(() => {
     const user = firebase.auth().currentUser;
@@ -55,6 +61,25 @@ export default function CreateScreen({ navigation, props }) {
       setImage(result.uri);
     }
   };
+
+  // get user data to store username and userImg
+  const getUser = async() => {
+    const user = firebase.auth().currentUser;
+    const currentUser = await firebase.firestore()
+    .collection('users')
+    .doc(user.uid)
+    .get()
+    .then((documentSnapshot) => {
+      if( documentSnapshot.exists ) {
+        console.log('User Data', documentSnapshot.data());
+        setUserData(documentSnapshot.data());
+      }
+    })
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   // Monitor route.params for changes and add items to the database
   async function savePost() {
@@ -102,6 +127,7 @@ export default function CreateScreen({ navigation, props }) {
             catName,
             catAge,
             breed,
+            // breedId,
             gender,
             about,
             vaccinationStatus,
@@ -109,6 +135,9 @@ export default function CreateScreen({ navigation, props }) {
             image: url,
             imageId,
             postLikedBy,
+            postAppliedBy,
+            username: userData.username,
+            userImg: userData.userImg,
             created: firebase.firestore.Timestamp.now(),
           };
           db.add(newPost);
@@ -121,6 +150,16 @@ export default function CreateScreen({ navigation, props }) {
       }
     );
   }
+  
+  async function getCat(){
+    const res = await getCatBreed(breed);
+    setBreedList(res);
+    console.log(res);
+  }
+
+  useEffect(() => {
+   getCat()
+  }, []);
 
   return (
     <KeyboardAwareScrollView>
@@ -182,12 +221,27 @@ export default function CreateScreen({ navigation, props }) {
             value={catAge}
             onChangeText={(input) => setCatAge(input)}
           />
-          <Text style={[stylesheet.label, styles.text]}>Breed</Text>
+          {/* <Text style={[stylesheet.label, styles.text]}>Breed</Text>
           <TextInput
             style={stylesheet.input}
             placeholder="Breed"
             value={breed}
             onChangeText={(input) => setBreed(input)}
+          /> */}
+          <Text style={[stylesheet.label, styles.text]}>Breed</Text>
+          <SelectDropdown
+            buttonStyle={stylesheet.dropdown1BtnStyle}
+            data={breedList}
+            onSelect={(selectedItem, index) => {
+              setBreed(selectedItem)
+              console.log(selectedItem, index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
           />
           <Text style={[stylesheet.label, styles.text]}>Gender</Text>
           <SelectDropdown
@@ -258,6 +312,9 @@ export default function CreateScreen({ navigation, props }) {
           ) : (
             <ActivityIndicator size="large" color="#000" />
           )}
+          {/* <TouchableOpacity style={stylesheet.button} onPress={getCat}>
+              <Text style={stylesheet.buttonText}>get cat breed</Text>
+          </TouchableOpacity> */}
         </View>
       </View>
     </KeyboardAwareScrollView>

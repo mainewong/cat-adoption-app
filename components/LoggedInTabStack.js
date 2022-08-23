@@ -4,6 +4,7 @@ import DiscoverStack from '../components/DiscoverStack';
 import NoticesStack from '../components/NoticesStack';
 import QuizStack from './QuizStack';
 import ProfileStack from '../components/ProfileStack';
+import { COLORS } from '../constants/theme';
 
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -26,10 +27,13 @@ export default function LoggedInStack() {
             iconName = "user"
           }
           // You can return any component that you like here!
-          return <FontAwesome name={iconName} size={size} color={color} />;
+          return <FontAwesome name={iconName} size={25} color={COLORS.red} />;
         },
-        tabBaractiveTintColor: '#3F5362',
-        tabBarinactiveTintColor: '#C7B6A6',
+        tabBarActiveBackgroundColor: COLORS.lightbeige,
+        tabBarInactiveBackgroundColor: COLORS.lightbeige,
+        tabBarInactiveTintColor: COLORS.purple,
+        tabBarActiveTintColor: COLORS.blue,
+       
       })}
       // screenOptions={{
       //   tabBaractiveTintColor: '#3F5362',

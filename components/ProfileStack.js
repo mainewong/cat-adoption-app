@@ -17,8 +17,8 @@ export default function ProfileStack() {
           headerTitleStyle: styles.headerTitle, headerLeft: null,
           headerShown: false,
         }} />
-      
-      <InnerStack.Screen name="EditProfile" component={EditProfileScreen}  options={{ title: "Edit Review"}} /> 
+       
+      <InnerStack.Screen name="EditProfile" component={EditProfileScreen}  options={{ title: "Edit Review"}} />
        
     </Stack.Navigator>
     )

@@ -5,41 +5,118 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Alert,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
 import { stylesheet } from "../styles/stylesheet";
-import { Checkbox, RadioButton } from "react-native-paper";
+import { Checkbox, RadioButton, useTheme } from "react-native-paper";
+import RadioGroup from 'react-native-radio-buttons-group';
+import firebase from "../database/firebaseDB";
+
+const db = firebase.firestore().collection("applications");
+
 
 export default function ApplyScreen({ navigation, route }) {
+//   const radioButtonsData = [{
+//     id: '1', // acts as primary key, should be unique and non-empty string
+//     label: 'Public Housing (HDB)',
+//     value: 'Public Housing (HDB)'
+//   }, {
+//     id: '2',
+//     label: 'Condominium',
+//     value: 'Condominium'
+//   }, {
+//     id: '3',
+//     label: 'Private Housing',
+//     value: 'Private Housing'
+//   },
+// ]
+
   const id = route.params.id;
+  const [user, setUser] = useState("")
   const [value, setValue] = useState("yes");
+  //const [houseType, setHouseType] = useState(radioButtonsData);
+  const [houseType, setHouseType] = useState("Public Housing (HDB)");
   const [catName, setCatName] = useState("");
   const [postId, setPostId] = useState("");
+  const [catOwner, setCatOwner] = useState("");
+  const [ownerUsername, setOwnerUsername] = useState("");
+  const [applyName, setApplyName] = useState("");
+  const [applyContact, setApplyContact] = useState("")
   const [showApplyModal, setShowApplyModal] = useState(false);
+
+  useEffect(() => {
+    const user = firebase.auth().currentUser;
+    setUser(user.uid);
+  }, []);
 
   function getDetails() {
     const postId = route.params.post.id;
     const catName = route.params.post.catName;
+    const catOwner = route.params.post.uid;
+    const ownerUsername = route.params.post.username;
     setPostId(postId);
     setCatName(catName);
+    setCatOwner(catOwner);
+    setOwnerUsername(ownerUsername);
   }
 
   useEffect(() => {
     getDetails();
   }, []);
 
-  const apply = () => {
+  async function apply(PostID) {
     if ( value == "no") {
         alert("You are required to agree to the terms before we can process your application")
     } else 
     setShowApplyModal(true);
+
+    const newPost = {
+      uid: user,
+      catName,
+      postId,
+      catOwner,
+      ownerUsername,
+      applyName,
+      applyContact,
+      houseType,
+      created: firebase.firestore.Timestamp.now(),
+    };
+    db.add(newPost);
+    navigation.navigate("MyNotices");
+
+    const post = await firebase.firestore().collection("posts").doc(PostID).get();
+    const postData = post.data();
+    const postApplyUid = postData.postAppliedBy;
+    // const postLikesCount = postLikesUid.length;
+
+    if (!postApplyUid.includes(user)) {
+      await firebase.firestore()
+        .collection("posts")
+        .doc(PostID)
+        .update({
+          postAppliedBy: [user, ...postApplyUid],
+        });
+    } else {
+      await firebase.firestore()
+        .collection("posts")
+        .doc(PostID)
+        .update({
+          postAppliedBy: postApplyUid.filter((uid) => uid !== user),
+        });
+    }
   };
 
   const closeModal = () => {
     setShowApplyModal(false);
     navigation.navigate("Profile");
   };
+
+  function onPressRadioButton(radioButtonsArray) {
+      setHouseType(radioButtonsArray);
+  }
+
   return (
     <KeyboardAwareScrollView>
       <View style={[stylesheet.container, { padding: 20 }]}>
@@ -55,15 +132,31 @@ export default function ApplyScreen({ navigation, route }) {
           <TextInput
             style={stylesheet.input}
             //value={breed}
-            //onChangeText={(input) => setBreed(input)}
+            onChangeText={(input) => setApplyName(input)}
           />
           <Text style={[stylesheet.label, styles.text]}>Contact Number</Text>
           <TextInput
             style={stylesheet.input}
             //value={breed}
-            //onChangeText={(input) => setBreed(input)}
+            onChangeText={(input) => setApplyContact(input)}
           />
         </View>
+
+        <Text style={[stylesheet.label, styles.text]}>House Type</Text>
+        {/* <RadioGroup
+            containerStyle={{ alignItems: "left" }}
+            radioButtons={houseType} 
+            onPress={onPressRadioButton}
+        /> */}
+         <RadioButton.Group
+          onValueChange={(value) => setHouseType(value)}
+          value={houseType}
+        >
+          <RadioButton.Item label="Public Housing (HDB)" value="Public Housing (HDB)" />
+          <RadioButton.Item label="Condominium" value="Condominium" />
+          <RadioButton.Item label="Private Housing" value="Private" />
+        </RadioButton.Group>
+
         <Text style={stylesheet.label}>
           Please read the following terms to before proceeding
         </Text>
@@ -91,9 +184,7 @@ export default function ApplyScreen({ navigation, route }) {
         </RadioButton.Group>
         <TouchableOpacity
           style={[stylesheet.button, {marginTop: 10, width: "100%" }]}
-          onPress={() => {
-            apply();
-          }}
+          onPress={() => apply(postId)}
         >
           <Text style={stylesheet.buttonText}>Apply</Text>
         </TouchableOpacity>
