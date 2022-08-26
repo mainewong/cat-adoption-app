@@ -15,21 +15,21 @@ export default function DiscoverStack() {
     return (
     <Stack.Navigator>
       <Stack.Screen component={DiscoverScreen} name="discover" options={{
-          title: "Browse",
+          title: "Discover",
           headerStyle: styles.header,
           headerTintColor: "white",
           headerTitleStyle: styles.headerTitle, headerLeft: null,
           headerShown: true,
         }} />
-    <InnerStack.Screen name="DiscoverDetails" component={DiscoverDetailsScreen} options={{ headerShown: true}} />
-    <InnerStack.Screen name="ApplyScreen" component={ApplyScreen} options={{ headerShown: true}} />
-    <InnerStack.Screen name="BreedInfo" component={BreedInfo} options={{ headerShown: true}} />
+    <InnerStack.Screen name="DiscoverDetails" component={DiscoverDetailsScreen} options={{ title: "Details", headerShown: true,  headerStyle: styles.header, headerTintColor: "white",}} />
+    <InnerStack.Screen name="ApplyScreen" component={ApplyScreen} options={{ title: "Apply", headerShown: true, headerStyle: styles.header, headerTintColor: "white" }} />
+    <InnerStack.Screen name="BreedInfo" component={BreedInfo} options={{  title: "About this breed", headerShown: true, headerStyle: styles.header, headerTintColor: "white" }} />
     </Stack.Navigator>
     )
   }
   
   const styles = StyleSheet.create({
     header: {
-      backgroundColor: COLORS.purple,
+      backgroundColor: COLORS.yellow,
     }
   })

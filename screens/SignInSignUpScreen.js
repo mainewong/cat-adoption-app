@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    color: COLORS.purple,
+    color: COLORS.grey,
     backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 12,
@@ -209,8 +209,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.red,
-    fontWeight: "700",
-    fontSize: 25,
+    fontWeight: "600",
+    fontSize: 36,
     marginVertical: 20,
   },
   signinImg: {

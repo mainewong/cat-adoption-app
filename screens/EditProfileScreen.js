@@ -13,19 +13,23 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { stylesheet } from "../styles/stylesheet";
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
+import { AntDesign } from '@expo/vector-icons';
+
 import * as ImagePicker from "expo-image-picker";
-import { AntDesign } from "@expo/vector-icons";
 
 //import ProfileImagePicker from "../components/ProfileImagePicker";
 
 import uuid from "react-native-uuid";
 import firebase from "../database/firebaseDB";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
+import { COLORS } from "../constants/theme";
+import { ScrollView } from "react-native-gesture-handler";
 
 // Firebase sets some timeers for a long period, which will trigger some warnings. Let's turn that off for this example
 console.disableYellowBox = true;
@@ -101,10 +105,12 @@ export default function EditProfileScreen({ navigation, route }) {
             .update({
               age: userData.age,
               username: userData.username,
+              name: userData.name,
               userImg: url,
             });
-          navigation.navigate("Profile");
+          
           Alert.alert("Profile edited!");
+          navigation.navigate("account");
     
           blob.close();
           return url;
@@ -130,19 +136,15 @@ export default function EditProfileScreen({ navigation, route }) {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
+    <KeyboardAwareScrollView>
+    <View style={{ flex: 1, justifyContent: "center", backgroundColor: "white", paddingVertical: 110 }}>
       <View style={imageUploaderStyles.container}>
-        {/* <Image
+        <Image
         source={{ uri: userImg }} style={{ width: 200, height: 200 }}
-        /> */}
+        />
         <Text>
-        {userData && (
-          <Image
-          source={{
-            uri: userData.userImg,
-          }}
-            style={{ width: 100, height: 100 }}
-          />
+        {userImg && (
+          <Image source={{ uri: userData.userImg }} style={{ width: 200, height: 200 }} />
         )}
         </Text>
 
@@ -151,7 +153,7 @@ export default function EditProfileScreen({ navigation, route }) {
             onPress={pickImage}
             style={imageUploaderStyles.uploadBtn}
           >
-            <Text>{userData ? "Edit" : "Upload"} User</Text>
+            <Text>{userData ? "Edit" : "Upload"} image</Text>
             <AntDesign name="camera" size={20} color="black" />
           </TouchableOpacity>
         </View>
@@ -165,28 +167,40 @@ export default function EditProfileScreen({ navigation, route }) {
           autoCorrect={false}
           value={userData ? userData.username : ''}
           onChangeText={(txt) => setUserData({...userData, username: txt})}
+          style={[stylesheet.textInput, { marginLeft: 15 }]}
+        />
+      </View>
+      <View style={styles.action}>
+      <AntDesign name="idcard" size={24} color="#333333" />
+        <TextInput
+          placeholder="Name"
+          placeholderTextColor="#666666"
+          autoCorrect={false}
+          value={userData ? userData.name : ''}
+          onChangeText={(txt) => setUserData({...userData, name: txt})}
           style={[stylesheet.textInput, { marginLeft: 10 }]}
         />
       </View>
       <View style={styles.action}>
-        <Feather name="phone" color="#333333" size={20} />
+        <Feather name="calendar" color="#333333" size={20} />
         <TextInput
           placeholder="age"
           placeholderTextColor="#666666"
           autoCorrect={false}
           value={userData ? userData.age : ''}
           onChangeText={(txt) => setUserData({...userData, age: txt})}
-          style={[stylesheet.textInput, { marginLeft: 10 }]}
+          style={[stylesheet.textInput, { marginLeft: 15 }]}
         />
       </View>
       {!uploading ? (
-        <TouchableOpacity style={stylesheet.button} onPress={updateProfile}>
+        <TouchableOpacity style={[stylesheet.button, { width: "70%", alignSelf: "center" }]} onPress={updateProfile}>
           <Text style={stylesheet.buttonText}>Save</Text>
         </TouchableOpacity>
       ) : (
         <ActivityIndicator size="large" color="#000" />
       )}
     </View>
+    </KeyboardAwareScrollView>
   );
 }
 
@@ -196,8 +210,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "grey",
+    borderBottomColor: COLORS.lightgrey,
     paddingBottom: 10,
+    paddingHorizontal: 20,
   },
 });
 
@@ -208,7 +223,7 @@ const imageUploaderStyles = StyleSheet.create({
     width: 200,
     backgroundColor: "#efefef",
     position: "relative",
-    borderRadius: 10,
+    borderRadius: 100,
     overflow: "hidden",
     alignSelf: "center",
     marginTop: 30,

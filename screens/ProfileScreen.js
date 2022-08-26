@@ -18,6 +18,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import firebase from "../database/firebaseDB";
 import { stylesheet } from "../styles/stylesheet";
 import { COLORS } from "../constants/theme";
+import { FontAwesome } from '@expo/vector-icons';
 import FavouritesScreen from "./FavouritesScreen";
 import ApplicationsScreen from "./ApplicationsScreen";
 import ApplicationsReceivedScreen from "./ApplicationsReceivedScreen";
@@ -101,7 +102,7 @@ export default function ProfileScreen({ navigation }) {
     auth.signOut().then(() => {
       navigation.navigate("SignInSignUp");
       //console.log("signed out");
-      setIsLoggedIn(false);
+      //setIsLoggedIn(false);
     });
     // .catch((error) => alert(error.message));
   };
@@ -127,72 +128,6 @@ export default function ProfileScreen({ navigation }) {
     };
   }, []);
 
-  // function renderPost({ item }) {
-  //   const postDate = moment(item.created.toDate()).startOf("hour").fromNow();
-
-  //   return (
-  //     <TouchableOpacity
-  //       onPress={() =>
-  //         navigation.navigate("DiscoverDetails", {
-  //           id: item.id,
-  //         })
-  //       }
-  //     >
-  //       <View
-  //         style={{
-  //           padding: 10,
-  //           paddingTop: 10,
-  //           paddingBottom: 10,
-  //           borderBottomColor: "#ccc",
-  //           //borderBottomWidth: 1,
-  //           flexDirection: "row",
-  //           flexWrap: "wrap",
-  //           justifyContent: "space-between",
-  //         }}
-  //       >
-  //         <Card>
-  //           <View
-  //             style={{
-  //               flexDirection: "row",
-  //               marginVertical: 10,
-  //               marginHorizontal: 10,
-  //             }}
-  //           >
-  //             <View>
-  //               <Text>
-  //                 <Image
-  //                   style={styles.userIcon}
-  //                   source={require("../assets/user.jpg")}
-  //                 />
-  //               </Text>
-  //             </View>
-  //             <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
-  //               <Text>User</Text>
-  //             </View>
-  //           </View>
-  //           <Image
-  //             style={{ width: 100, height: 100 }}
-  //             source={{ uri: item.image }}
-  //           />
-  //           <View style={{ margin: 10 }}>
-  //             <Text style={stylesheet.label}>{item.catName}</Text>
-  //             <View style={[stylesheet.label, { flexDirection: "row" }]}>
-  //               <Text style={[stylesheet.smallLabel, { marginRight: 20 }]}>
-  //                 {item.catAge + " year old"}
-  //               </Text>
-  //               <Text style={stylesheet.smallLabel}>{item.breed}</Text>
-  //             </View>
-  //             <Text>Posted {postDate}</Text>
-  //             {/* <TouchableOpacity onPress={() => likePost( item.id )}>
-  //                 <Ionicons name="heart-outline" size={24} />          
-  //              </TouchableOpacity> */}
-  //           </View>
-  //         </Card>
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // }
-
   function renderItem({ item }) {
     return (
       <View style={styles.profileContainer}>
@@ -201,15 +136,16 @@ export default function ProfileScreen({ navigation }) {
           source={{
             uri: item
               ? item.userImg ||
-                "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg"
-              : "https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg",
+                "https://m.medigatenews.com/resources/img/add_user.png"
+              : "https://m.medigatenews.com/resources/img/add_user.png",
           }}
         />
-        <Text style={stylesheet.text}>
-          {item ? "@" + item.username || "@" + "username" : ""}
+        <Text style={[stylesheet.textWhite, {fontWeight: "700"}]}>
+          {item ? "@" + item.username || "No username recorded" : ""}
         </Text>
-        <Text style={stylesheet.text}>{item ? item.age || "age" : ""}</Text>
-        <Text style={stylesheet.text}>{user}</Text>
+        <Text style={[stylesheet.textWhite, {fontSize: 25, marginTop: 5}]}>{item ? item.name || "No name recorded" : ""}</Text>
+        <Text style={stylesheet.textWhite}>{item ? item.age + " years old" || "No age recorded" : ""}</Text>
+        <Text style={stylesheet.textWhite}>{user}</Text>
       </View>
     );
   }
@@ -217,7 +153,7 @@ export default function ProfileScreen({ navigation }) {
   const Tab = createMaterialTopTabNavigator();
 
   return (
-    <ScrollView>
+    <ScrollView nestedScrollEnabled = {true}>
       <View data={profile} style={styles.profileView}>
         <FlatList
           data={profile}
@@ -248,8 +184,8 @@ export default function ProfileScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={{ marginHorizontal: 5}}>
-            <TouchableOpacity style={stylesheet.button}>
-              <Text onPress={handleSignOut} style={stylesheet.buttonText}>
+            <TouchableOpacity onPress={handleSignOut} style={stylesheet.button}>
+              <Text style={stylesheet.buttonText}>
                 Sign out
               </Text>
             </TouchableOpacity>
@@ -258,10 +194,30 @@ export default function ProfileScreen({ navigation }) {
       </View>
 
       <View style={{ flex: 1, height: 400, }}>    
-        <Tab.Navigator>
+      <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          if (route.name === 'Your Favourites') {
+            iconName = "heart" 
+          } else if (route.name === 'Your Applications') {
+            iconName = "check-square"
+          } else if (route.name === 'Adoptions Applicants') {
+            iconName = "envelope-open"
+          }
+          // You can return any component that you like here!
+          return <FontAwesome name={iconName} size={22} color={COLORS.red} />;
+        },
+        tabBarActiveBackgroundColor: "white",
+        tabBarInactiveBackgroundColor: "white",
+        tabBarInactiveTintColor: COLORS.purple,
+        tabBarActiveTintColor: COLORS.red,
+        tabBarIndicatorStyle: {backgroundColor: COLORS.yellow}
+       
+      })}>
           <Tab.Screen name="Your Favourites" component={FavouritesScreen} />
-          <Tab.Screen name="You Applied For" component={ApplicationsScreen} />
-          <Tab.Screen name="Applications Received" component={ApplicationsReceivedScreen} />
+          <Tab.Screen name="Your Applications" component={ApplicationsScreen} />
+          <Tab.Screen name="Adoptions Applicants" component={ApplicationsReceivedScreen} />
         </Tab.Navigator>
       </View>
       
@@ -290,8 +246,8 @@ const styles = StyleSheet.create({
   profileView: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.lightbeige,
-    paddingVertical: 50,
+    backgroundColor: COLORS.purple,
+    paddingVertical: 30,
   },
   profilePic: {
     width: 150,

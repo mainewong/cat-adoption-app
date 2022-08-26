@@ -3,7 +3,11 @@ import React, { useState, useEffect, } from "react";
 import { Rating } from "react-native-ratings";
 import { getCatBreedInfo } from "../api/BreedInfoApi";
 import { stylesheet } from "../styles/stylesheet";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
+import { COLORS } from "../constants/theme";
 
 export default function BreedInfo({ navigation, route }) {
 
@@ -37,156 +41,187 @@ export default function BreedInfo({ navigation, route }) {
 
   return (
     <ScrollView>
-      <View>
+      <View style={[stylesheet.container, {alignItems: "center", padding: 30 }]}>
         <Text style={stylesheet.title}>{catBreed}</Text>
         {/* <TouchableOpacity style={stylesheet.button} onPress={getCat}>
           <Text>Get breed info</Text>
         </TouchableOpacity> */}
-        <Text style={stylesheet.itemLabel}>Description</Text>
         {info.map((item) => {
-          return <Text key={item}>{item.description}</Text>;
+          return <Text style={{fontSize: 16, textAlign: "center", marginTop: 5, color: COLORS.grey }} key={item}>{item.description}</Text>;
         })}
-        <Text style={stylesheet.itemLabel}>Temperament</Text>
+        <Text style={[stylesheet.itemLabel, { marginTop: 15 }]}>Temperament</Text>
         {info.map((item) => {
-          return <Text key={item}>{item.temperament}</Text>;
+          return <Text style={{fontSize: 16, textAlign: "center", marginTop: 0, color: COLORS.grey }} key={item}>{item.temperament}</Text>;
         })}
-        <Text style={stylesheet.itemLabel}>Origin</Text>
+        <Text style={[stylesheet.itemLabel, { marginTop: 15 }]}>Origin</Text>
         {info.map((item) => {
-          return <Text key={item}>{item.origin}</Text>;
+          return <Text style={{fontSize: 16, textAlign: "center", marginTop: 0, color: COLORS.grey }} key={item}>{item.origin}</Text>;
         })}
-        <Text style={stylesheet.itemLabel}>Life Span</Text>
+        <Text style={[stylesheet.itemLabel, { marginTop: 15 }]}>Life Span</Text>
         {info.map((item) => {
-          return <Text key={item}>{item.life_span} years</Text>;
+          return <Text style={{fontSize: 16, textAlign: "center", marginTop: 0, color: COLORS.grey }} key={item}>{item.life_span} years</Text>;
         })}
 
         {/* RATINGS */}
-        <Text style={stylesheet.itemLabel}>Affection Level</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.affection_level}
-        />
-        })}
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="hand-heart" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Affection Level</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.affection_level}
+            />
+            })}
+          </View>
+          
+          <View style={styles.iconContainer}>
+            <FontAwesome name="child" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Child Friendly</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.child_friendly}
+            />
+            })}
+          </View>
+        </View>
 
-        <Text style={stylesheet.itemLabel}>Child Friendly</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.child_friendly}
-        />
-        })}
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="dog" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Dog Friendly</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.dog_friendly}
+            />
+            })}
+          </View>
 
-        <Text style={stylesheet.itemLabel}>Dog Friendly</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.dog_friendly}
-        />
-        })}
+          <View style={styles.iconContainer}>
+          <FontAwesome5 name="bolt" size={30} color="#EE574E" />
+          <Text style={stylesheet.itemLabel}>Energy Level</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.energy_level}
+            />
+            })}
+          </View>
+        </View>
 
-        <Text style={stylesheet.itemLabel}>Energy Level</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.energy_level}
-        />
-        })}
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.iconContainer}>
+            <FontAwesome5 name="brain" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Intelligence</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.intelligence}
+            />
+            })}
+          </View>
 
-        <Text style={stylesheet.itemLabel}>Intelligence</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.intelligence}
-        />
-        })}
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="volleyball" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Shedding Level</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.shedding_level}
+            />
+            })}
+          </View>
+        </View>
+        
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.iconContainer}>
+            <FontAwesome name="users" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Social Needs</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.social_needs}
+            />
+            })}
+          </View>
 
-        <Text style={stylesheet.itemLabel}>Shedding Level</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.shedding_level}
-        />
-        })}
-
-        <Text style={stylesheet.itemLabel}>Social Needs</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.social_needs}
-        />
-        })}
-
-        <Text style={stylesheet.itemLabel}>Vocalisation</Text>
-        {info.map((item) => {
-        return <Rating
-          type='custom'
-          ratingBackgroundColor='lightgrey'
-          tintColor="#eeeeee"
-          ratingColor="black"
-          style={styles.ratingContainer}
-          key={item}
-          ratingCount={5}
-          imageSize={30}
-          readonly={true}
-          startingValue={item.vocalisation}
-        />
-        })}
+          <View style={styles.iconContainer}>
+            <Ionicons name="volume-medium" size={30} color="#EE574E" />
+            <Text style={stylesheet.itemLabel}>Vocalisation</Text>
+            {info.map((item) => {
+            return <Rating
+              type='custom'
+              ratingBackgroundColor='lightgrey'
+              tintColor="white"
+              ratingColor="#FDA946"
+              style={styles.ratingContainer}
+              key={item}
+              ratingCount={5}
+              imageSize={25}
+              readonly={true}
+              startingValue={item.vocalisation}
+            />
+            })}
+          </View>
+        </View>
 
       </View>
     </ScrollView>
@@ -195,6 +230,11 @@ export default function BreedInfo({ navigation, route }) {
 
 const styles = StyleSheet.create({
   ratingContainer: {
-    alignSelf: "left",
+    alignSelf: "center",
+    marginHorizontal: 25,
+  },
+  iconContainer: {
+    marginTop: 25,
+    alignItems: "center"
   }
 });

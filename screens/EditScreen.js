@@ -12,7 +12,10 @@ import firebase from "../database/firebaseDB";
 import { stylesheet } from "../styles/stylesheet";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
+
 import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+
 import uuid from "react-native-uuid";
 import SelectDropdown from "react-native-select-dropdown";
 import { getCatBreed } from "../api/CatBreedApi";
@@ -162,136 +165,135 @@ export default function EditScreen({ navigation, route }) {
 
   return (
     <KeyboardAwareScrollView>
-      <View style={imageUploaderStyles.container}>
-        <Image source={{ uri: image }} style={{ width: 180, height: 180 }} />
+      <View style={{ marginBottom: 20, backgroundColor: "white" }}>
+        <View style={imageUploaderStyles.container}>
+          <Image source={{ uri: image }} style={{ width: 180, height: 180 }} />
 
-        <View style={imageUploaderStyles.uploadBtnContainer}>
-          <TouchableOpacity
-            onPress={pickImage}
-            style={imageUploaderStyles.uploadBtn}
-          >
-            <Text>{image ? "Edit" : "Upload"} Image</Text>
-            <AntDesign name="camera" size={20} color="black" />
+          <View style={imageUploaderStyles.uploadBtnContainer}>
+            <TouchableOpacity
+              onPress={pickImage}
+              style={imageUploaderStyles.uploadBtn}
+            >
+              <Text>{image ? "Edit" : "Upload"} Image</Text>
+              <AntDesign name="camera" size={20} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={{ margin: 20 }}>
+          {/* BASIC INFO */}
+          <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>
+              BASIC INFO
+            </Text>
+            <Text style={[stylesheet.text]}>Name</Text>
+            <TextInput
+              style={stylesheet.input}
+              placeholder="Name"
+              value={catName}
+              onChangeText={(input) => setCatName(input)}
+            />
+            <Text style={[stylesheet.text]}>Age</Text>
+            <TextInput
+              placeholder="Age"
+              style={stylesheet.input}
+              value={catAge}
+              onChangeText={(input) => setCatAge(input)}
+            />
+            <Text style={[stylesheet.text]}>Breed</Text>
+            <SelectDropdown
+              buttonStyle={stylesheet.dropdown1BtnStyle}
+              data={breedList}
+              defaultButtonText={breed}
+              buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
+              onSelect={(selectedItem, index) => {
+                setBreed(selectedItem)
+                console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+              search
+              searchInputStyle={styles.dropdown2searchInputStyleStyle}
+              searchPlaceHolder={'Search here'}
+              searchPlaceHolderColor={'#bebebe'}
+              renderSearchInputLeftIcon={() => {
+                return <FontAwesome name={'search'} color={'#bebebe'} size={18} />;
+              }}
+            />
+            <Text style={[stylesheet.text]}>Gender</Text>
+            <SelectDropdown
+              buttonStyle={stylesheet.dropdown1BtnStyle}
+              data={["Male", "Female"]}
+              defaultButtonText={gender}
+              buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
+              onSelect={(selectedItem, index) => {
+                setGender(selectedItem);
+                console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+            />
+            <Text style={[stylesheet.text]}>About the cat</Text>
+            <TextInput
+              multiline
+              numberOfLines={3}
+              style={[stylesheet.input, { height: 65 }]}
+              placeholder="Character, temperament etc."
+              value={about}
+              onChangeText={(input) => setAbout(input)}
+              autoCorrect={true}
+            />
+
+            {/* HEALTH  */}
+            <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>HEALTH</Text>
+            <Text style={[stylesheet.text]}>
+              Vaccination Status
+            </Text>
+            <SelectDropdown
+              buttonStyle={stylesheet.dropdown1BtnStyle}
+              data={["Vaccinated", "Non-vaccinated"]}
+              defaultButtonText={vaccinationStatus}
+              buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
+              onSelect={(selectedItem, index) => {
+                setVaccinationStatus(selectedItem);
+                console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+            />
+
+            <Text style={[stylesheet.text]}>Sterilization Status</Text>
+            <SelectDropdown
+              buttonStyle={stylesheet.dropdown1BtnStyle}
+              data={["Sterilized", "Non-Sterilized"]}
+              defaultButtonText={sterilizeStatus}
+              buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
+              onSelect={(selectedItem, index) => {
+                setSterilizeStatus(selectedItem);
+                console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+            />
+          <TouchableOpacity style={stylesheet.button} onPress={updatePost}>
+            <Text style={stylesheet.buttonText}>Save</Text>
           </TouchableOpacity>
         </View>
-      </View>
-
-      <View style={{ margin: 20 }}>
-        {/* BASIC INFO */}
-        <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>
-            BASIC INFO
-          </Text>
-          <Text style={[stylesheet.label, styles.text]}>Name</Text>
-          <TextInput
-            style={stylesheet.input}
-            placeholder="Name"
-            value={catName}
-            onChangeText={(input) => setCatName(input)}
-          />
-          <Text style={[stylesheet.label, styles.text]}>Age</Text>
-          <TextInput
-            placeholder="Age"
-            style={stylesheet.input}
-            value={catAge}
-            onChangeText={(input) => setCatAge(input)}
-          />
-          <Text style={[stylesheet.label, styles.text]}>Breed</Text>
-          <SelectDropdown
-            buttonStyle={stylesheet.dropdown1BtnStyle}
-            data={breedList}
-            onSelect={(selectedItem, index) => {
-              setBreed(selectedItem)
-              console.log(selectedItem, index);
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-          />
-          <Text style={[stylesheet.label, styles.text]}>Gender</Text>
-          <SelectDropdown
-            buttonStyle={stylesheet.dropdown1BtnStyle}
-            data={["Male", "Female"]}
-            onSelect={(selectedItem, index) => {
-              setGender(selectedItem);
-              console.log(selectedItem, index);
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-          />
-          <Text style={[stylesheet.label, styles.text]}>About the cat</Text>
-          <TextInput
-            multiline
-            numberOfLines={3}
-            style={[stylesheet.input, { height: 65 }]}
-            placeholder="Character, temperament etc."
-            value={about}
-            onChangeText={(input) => setAbout(input)}
-            autoCorrect={true}
-          />
-
-          {/* HEALTH  */}
-          <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>HEALTH</Text>
-          <Text style={[stylesheet.label, styles.text]}>
-            Vaccination Status
-          </Text>
-          <SelectDropdown
-            buttonStyle={stylesheet.dropdown1BtnStyle}
-            data={["Vaccinated", "Non-vaccinated"]}
-            onSelect={(selectedItem, index) => {
-              setVaccinationStatus(selectedItem);
-              console.log(selectedItem, index);
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-          />
-
-          <Text style={[stylesheet.label, styles.text]}>Sterilized</Text>
-          <SelectDropdown
-            buttonStyle={stylesheet.dropdown1BtnStyle}
-            data={["Sterilized", "Non-Sterilized"]}
-            onSelect={(selectedItem, index) => {
-              setSterilizeStatus(selectedItem);
-              console.log(selectedItem, index);
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-          />
-        {/* <Text style={[stylesheet.label, styles.text]}>Name</Text>
-        <TextInput
-          style={stylesheet.input}
-          value={catName}
-          onChangeText={(input) => setCatName(input)}
-        />
-        <Text style={[stylesheet.label, styles.text]}>Age</Text>
-        <TextInput
-          style={stylesheet.input}
-          value={catAge}
-          onChangeText={(input) => setCatAge(input)}
-        />
-        <Text style={[stylesheet.label, styles.text]}>Breed</Text>
-        <TextInput
-          style={stylesheet.input}
-          value={breed}
-          onChangeText={(input) => setBreed(input)}
-        /> */}
-        <TouchableOpacity style={stylesheet.button} onPress={updatePost}>
-          <Text style={stylesheet.buttonText}>Save</Text>
-        </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>
   );

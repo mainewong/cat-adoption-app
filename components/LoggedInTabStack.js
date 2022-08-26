@@ -29,10 +29,10 @@ export default function LoggedInStack() {
           // You can return any component that you like here!
           return <FontAwesome name={iconName} size={25} color={COLORS.red} />;
         },
-        tabBarActiveBackgroundColor: COLORS.lightbeige,
-        tabBarInactiveBackgroundColor: COLORS.lightbeige,
+        tabBarActiveBackgroundColor: "white",
+        tabBarInactiveBackgroundColor: "white",
         tabBarInactiveTintColor: COLORS.purple,
-        tabBarActiveTintColor: COLORS.blue,
+        tabBarActiveTintColor: COLORS.red,
        
       })}
       // screenOptions={{

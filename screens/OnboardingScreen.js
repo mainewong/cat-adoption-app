@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import React from "react";
 import Onboarding from "react-native-onboarding-swiper";
+import { COLORS } from "../constants/theme";
 
 const OnboardingScreen = ({ navigation }) => {
 
   const Dots = ({selected}) => {
     let backgroundColor;
-    backgroundColor = selected ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.3)';
+    backgroundColor = selected ? '#FFF9F3' : 'rgba(0, 0, 0, 0.3)';
     return (
       <View
         style={{
@@ -34,19 +35,19 @@ const OnboardingScreen = ({ navigation }) => {
 
 const Skip = ({ ...props }) => (
     <TouchableOpacity style={{ marginHorizontal: 20 }} {...props}>
-      <Text style={{ fontSize: 16 }}>Skip</Text>
+      <Text style={{ fontSize: 16, color: "#FFF9F3" }}>Skip</Text>
     </TouchableOpacity>
   );
 
   const Next = ({ ...props }) => (
     <TouchableOpacity style={{ marginHorizontal: 20 }} {...props}>
-      <Text style={{ fontSize: 16 }}>Next</Text>
+      <Text style={{ fontSize: 16, color: "#FFF9F3" }}>Next</Text>
     </TouchableOpacity>
   );
 
   const Done = ({ ...props }) => (
     <TouchableOpacity style={{ marginHorizontal: 20 }} {...props}>
-      <Text style={{ fontSize: 16 }}>Done</Text>
+      <Text style={{ fontSize: 16, color: "#FFF9F3" }}>Done</Text>
     </TouchableOpacity>
   );
 
@@ -61,37 +62,43 @@ const Skip = ({ ...props }) => (
       onDone={() => navigation.navigate("SignInSignUp")}
       pages={[
         {
-          backgroundColor: "#f9ebdc",
+          backgroundColor: "#FA7E5E",
           image: (
             <Image
               source={require("../assets/onboarding-1.png")}
               style={styles.onboardingImg}
             />
           ),
-          title: "Onboarding 1",
-          subtitle: "Done with React Native Onboarding Swiper",
+          title: "Welcome to Furever",
+          titleStyles: styles.title,
+          subtitle: "Furever is where you can help a stray cat to find a forever home, or welcome one into your life.",
+          subTitleStyles: {color: '#FFF9F3'}
         },
         {
-          backgroundColor: "#f9ebdc",
+          backgroundColor: "#FDA946",
           image: (
             <Image
               source={require("../assets/onboarding-2.png")}
               style={styles.onboardingImg}
             />
           ),
-          title: "Onboarding 2",
-          subtitle: "Done with React Native Onboarding Swiper",
+          title: "Every cat deserves a home",
+          titleStyles: styles.title,
+          subtitle: "By adopting, you’re helping more cats in need and giving them an opportunity to become beloved pets.",
+          subTitleStyles: {color: 'white'}
         },
         {
-          backgroundColor: "#f9ebdc",
+          backgroundColor: "#7954A5",
           image: (
             <Image
               source={require("../assets/onboarding-3.png")}
               style={styles.onboardingImg}
             />
           ),
-          title: "Onboarding 3",
-          subtitle: "Done with React Native Onboarding Swiper",
+          title: "Make a new friend",
+          titleStyles: styles.title,
+          subtitle: "These cats have so much love to give and they won’t ever stop giving it to you once you let them into your heart!",
+          subTitleStyles: {color: 'white'}
         },
       ]}
     />
@@ -106,4 +113,9 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     height: 330,
   },
+  title: {
+    fontSize: 30,
+    fontWeight: "700",
+    color: '#FFF9F3',
+  }
 });

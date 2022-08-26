@@ -15,11 +15,15 @@ import { stylesheet } from "../styles/stylesheet";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import ImageUploader from "../components/ImageUploader";
 import * as ImagePicker from "expo-image-picker";
+
 import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { Foundation } from '@expo/vector-icons'; 
+
 import uuid from "react-native-uuid";
 import SelectDropdown from "react-native-select-dropdown";
 import { getCatBreed } from "../api/CatBreedApi";
-import { get } from "react-native/Libraries/Utilities/PixelRatio";
+// import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 const db = firebase.firestore().collection("posts");
 
@@ -163,7 +167,7 @@ export default function CreateScreen({ navigation, props }) {
 
   return (
     <KeyboardAwareScrollView>
-      <View style={{ marginBottom: 20 }}>
+      <View style={{ marginBottom: 20, backgroundColor: "white" }}>
         <View style={imageUploaderStyles.container}>
           <View
             style={{ justifyContent: "flex-start", width: "40%", margin: 20 }}
@@ -172,7 +176,7 @@ export default function CreateScreen({ navigation, props }) {
             <View style={{ backgroundColor: "lightgrey", borderRadius: 10 }}>
               <Image
                 source={{ uri: image }}
-                style={{ width: 150, height: 150 }}
+                style={{ width: 155, height: 155, borderRadius: 10 }}
               />
 
               <View style={imageUploaderStyles.uploadBtnContainer}>
@@ -195,9 +199,10 @@ export default function CreateScreen({ navigation, props }) {
               alignSelf: "center",
             }}
           >
-            <Text>Tips:</Text>
-            <Text>
-              Use an image that fully show that face of the cat to attract more potential adopters!
+            <Foundation name="lightbulb" size={24} color="#FDA946" />
+            <Text style={[stylesheet.text, {fontWeight: "bold"}]}>Tips</Text>
+            <Text style={stylesheet.text}>
+              Use a photo that fully shows that face of the cat to attract more potential adopters!
             </Text>
           </View>
         </View>
@@ -207,14 +212,14 @@ export default function CreateScreen({ navigation, props }) {
           <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>
             BASIC INFO
           </Text>
-          <Text style={[stylesheet.label, styles.text]}>Name</Text>
+          <Text style={[stylesheet.text]}>Name</Text>
           <TextInput
             style={stylesheet.input}
             placeholder="Name"
             value={catName}
             onChangeText={(input) => setCatName(input)}
           />
-          <Text style={[stylesheet.label, styles.text]}>Age</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>Age</Text>
           <TextInput
             placeholder="Age"
             style={stylesheet.input}
@@ -228,9 +233,11 @@ export default function CreateScreen({ navigation, props }) {
             value={breed}
             onChangeText={(input) => setBreed(input)}
           /> */}
-          <Text style={[stylesheet.label, styles.text]}>Breed</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>Breed</Text>
           <SelectDropdown
             buttonStyle={stylesheet.dropdown1BtnStyle}
+            defaultButtonText="Select breed"
+            buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
             data={breedList}
             onSelect={(selectedItem, index) => {
               setBreed(selectedItem)
@@ -242,10 +249,19 @@ export default function CreateScreen({ navigation, props }) {
             rowTextForSelection={(item, index) => {
               return item;
             }}
+            search
+            searchInputStyle={styles.dropdown2searchInputStyleStyle}
+            searchPlaceHolder={'Search here'}
+            searchPlaceHolderColor={'#bebebe'}
+            renderSearchInputLeftIcon={() => {
+              return <FontAwesome name={'search'} color={'#bebebe'} size={18} />;
+            }}
           />
-          <Text style={[stylesheet.label, styles.text]}>Gender</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>Gender</Text>
           <SelectDropdown
             buttonStyle={stylesheet.dropdown1BtnStyle}
+            defaultButtonText="Select gender"
+            buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
             data={["Male", "Female"]}
             onSelect={(selectedItem, index) => {
               setGender(selectedItem);
@@ -258,7 +274,7 @@ export default function CreateScreen({ navigation, props }) {
               return item;
             }}
           />
-          <Text style={[stylesheet.label, styles.text]}>About the cat</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>About the cat</Text>
           <TextInput
             multiline
             numberOfLines={3}
@@ -271,11 +287,11 @@ export default function CreateScreen({ navigation, props }) {
 
           {/* HEALTH  */}
           <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>HEALTH</Text>
-          <Text style={[stylesheet.label, styles.text]}>
-            Vaccination Status
-          </Text>
+          <Text style={[stylesheet.text]}>Vaccination Status</Text>
           <SelectDropdown
             buttonStyle={stylesheet.dropdown1BtnStyle}
+            defaultButtonText="Select option"
+            buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
             data={["Vaccinated", "Non-vaccinated"]}
             onSelect={(selectedItem, index) => {
               setVaccinationStatus(selectedItem);
@@ -289,9 +305,11 @@ export default function CreateScreen({ navigation, props }) {
             }}
           />
 
-          <Text style={[stylesheet.label, styles.text]}>Sterilized</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>Sterilization Status</Text>
           <SelectDropdown
             buttonStyle={stylesheet.dropdown1BtnStyle}
+            defaultButtonText="Select option"
+            buttonTextStyle={stylesheet.dropdown1BtnTxtStyle}
             data={["Sterilized", "Non-Sterilized"]}
             onSelect={(selectedItem, index) => {
               setSterilizeStatus(selectedItem);
@@ -326,7 +344,7 @@ const styles = StyleSheet.create({});
 const imageUploaderStyles = StyleSheet.create({
   container: {
     //elevation: 2,
-    //backgroundColor: "black",
+    backgroundColor: "white",
     position: "relative",
     borderRadius: 10,
     overflow: "hidden",

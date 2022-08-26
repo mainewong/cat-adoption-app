@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  Image,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
@@ -13,6 +14,7 @@ import { stylesheet } from "../styles/stylesheet";
 import { Checkbox, RadioButton, useTheme } from "react-native-paper";
 import RadioGroup from 'react-native-radio-buttons-group';
 import firebase from "../database/firebaseDB";
+import { COLORS } from "../constants/theme";
 
 const db = firebase.firestore().collection("applications");
 
@@ -43,6 +45,7 @@ export default function ApplyScreen({ navigation, route }) {
   const [catOwner, setCatOwner] = useState("");
   const [ownerUsername, setOwnerUsername] = useState("");
   const [applyName, setApplyName] = useState("");
+  const [image, setImage] = useState("");
   const [applyContact, setApplyContact] = useState("")
   const [showApplyModal, setShowApplyModal] = useState(false);
 
@@ -56,10 +59,12 @@ export default function ApplyScreen({ navigation, route }) {
     const catName = route.params.post.catName;
     const catOwner = route.params.post.uid;
     const ownerUsername = route.params.post.username;
+    const image = route.params.post.image;
     setPostId(postId);
     setCatName(catName);
     setCatOwner(catOwner);
     setOwnerUsername(ownerUsername);
+    setImage(image);
   }
 
   useEffect(() => {
@@ -74,6 +79,7 @@ export default function ApplyScreen({ navigation, route }) {
 
     const newPost = {
       uid: user,
+      image,
       catName,
       postId,
       catOwner,
@@ -84,7 +90,7 @@ export default function ApplyScreen({ navigation, route }) {
       created: firebase.firestore.Timestamp.now(),
     };
     db.add(newPost);
-    navigation.navigate("MyNotices");
+    //navigation.navigate("MyNotices");
 
     const post = await firebase.firestore().collection("posts").doc(PostID).get();
     const postData = post.data();
@@ -121,20 +127,21 @@ export default function ApplyScreen({ navigation, route }) {
     <KeyboardAwareScrollView>
       <View style={[stylesheet.container, { padding: 20 }]}>
         <View style={{ width: "100%", marginVertical: 10 }}>
-          <Text style={[stylesheet.label, styles.text]}>Cat</Text>
+        <Image style={styles.catRoundImg} source={{ uri: image }}/>
+        <Text style={[stylesheet.text]}>Cat Name</Text>
           <TextInput
             style={[stylesheet.input, {backgroundColor: "#e5e5e5"}]}
             value={catName}
             editable={false}
             //onChangeText={(input) => setBreed(input)}
           />
-          <Text style={[stylesheet.label, styles.text]}>Your Full Name</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>Your Full Name</Text>
           <TextInput
             style={stylesheet.input}
             //value={breed}
             onChangeText={(input) => setApplyName(input)}
           />
-          <Text style={[stylesheet.label, styles.text]}>Contact Number</Text>
+          <Text style={[stylesheet.text, {marginTop: 10}]}>Contact Number</Text>
           <TextInput
             style={stylesheet.input}
             //value={breed}
@@ -142,7 +149,7 @@ export default function ApplyScreen({ navigation, route }) {
           />
         </View>
 
-        <Text style={[stylesheet.label, styles.text]}>House Type</Text>
+        <Text style={[stylesheet.text, {marginTop: 10}]}>House Type</Text>
         {/* <RadioGroup
             containerStyle={{ alignItems: "left" }}
             radioButtons={houseType} 
@@ -157,22 +164,22 @@ export default function ApplyScreen({ navigation, route }) {
           <RadioButton.Item label="Private Housing" value="Private" />
         </RadioButton.Group>
 
-        <Text style={stylesheet.label}>
+        <Text style={[stylesheet.text, {marginTop: 10, fontWeight: "bold" }]}>
           Please read the following terms to before proceeding
         </Text>
-        <Text style={{ marginVertical: 15 }}>
+        <Text style={[stylesheet.text, {marginTop: 10}]}>
           1. House visit is a mandatory process before your adoption request can
           be accepted.
         </Text>
-        <Text style={{ marginVertical: 15 }}>
+        <Text style={[stylesheet.text, {marginTop: 10}]}>
           2. You are required to take all measures to ensure your cat is kept
           strictly and safely indoors? E.g. Meshing up window.
         </Text>
-        <Text style={{ marginVertical: 15 }}>
+        <Text style={[stylesheet.text, {marginTop: 10}]}>
           3. It is mandatory to neutur or spay cat when it is time to do so (if
           cat is currently not fixed).
         </Text>
-        <Text style={{ fontWeight: "bold" }}>
+        <Text style={[stylesheet.text, {marginTop: 10, fontWeight: "bold" }]}>
           Do you agree to the terms?
         </Text>
         <RadioButton.Group
@@ -204,7 +211,9 @@ export default function ApplyScreen({ navigation, route }) {
           >
             <View
               style={{
-                backgroundColor: "lightgrey",
+                backgroundColor: COLORS.lightbeige,
+                borderWidth: 1,
+                borderColor: COLORS.darkbeige,
                 width: "90%",
                 borderRadius: 20,
                 padding: 30,
@@ -212,13 +221,12 @@ export default function ApplyScreen({ navigation, route }) {
               }}
             >
               <Text style={stylesheet.title}>Application submitted!</Text>
-              <Text style={{ textAlign: "center" }}>
-                We have received your application, you will be contacted by the
-                noticer within 2-3 working days!
+              <Text style={[stylesheet.text, {marginTop: 5, textAlign: "center"}]}>
+                We have received your application, you will be contacted within 2-3 working days!
               </Text>
-              <TouchableOpacity style={[stylesheet.button, { width: "80%" }]}>
+              <TouchableOpacity style={[stylesheet.colorOutlineButton, { width: "80%" }]}>
                 <Text
-                  style={stylesheet.buttonText}
+                  style={stylesheet.colorOutlineButtonText}
                   onPress={() => {
                     closeModal();
                   }}
@@ -234,4 +242,12 @@ export default function ApplyScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  catRoundImg: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    alignSelf: "center",
+    marginBottom: 20,
+  }
+});

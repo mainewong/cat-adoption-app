@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Linking,
   Animated,
 } from "react-native";
 import React from "react";
@@ -13,8 +14,14 @@ import data from "../../quiz/QuizData";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
+import { stylesheet } from "../../styles/stylesheet";
+import { useNavigation } from "@react-navigation/native";
+
+const CATFACTS_URL = "https://cvillecatcare.com/veterinary-topics/101-amazing-cat-facts-fun-trivia-about-your-feline-friend/#:~:text=Cats%20are%20believed%20to%20be,to%20six%20times%20their%20length."
 
 const Quiz = () => {
+  const navigation = useNavigation();
+
   const allQuestions = data;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentOptionSelected, setCurrentOptionSelected] = useState(null);
@@ -77,7 +84,7 @@ const Quiz = () => {
     return (
       <View
         style={{
-          marginVertical: 40,
+          marginVertical: 30,
         }}
       >
         {/* Question counter */}
@@ -132,7 +139,7 @@ const Quiz = () => {
                   : option == currentOptionSelected
                   ? COLORS.error + "20"
                   : COLORS.secondary + "20",
-              height: 60,
+              height: 55,
               borderRadius: 20,
               flexDirection: "row",
               alignItems: "center",
@@ -245,36 +252,75 @@ const Quiz = () => {
     );
   };
 
+  const adoptNowBtn = () => {
+    navigation.navigate("Discover")
+    setShowScoreModal(false);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+
+    setCurrentOptionSelected(null);
+    setCorrectOption(null);
+    setIsOptionsDisabled(false);
+    setShowNextButton(false);
+    Animated.timing(progress, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }
+
   const scoreMessage = () => {
     if (score === allQuestions.length) {
       return (
         <View>
-          <Text style={{ fontSize: 25, fontWeight: "bold", textAlign: "center" }}>
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <Text style={{ fontSize: 30, color: COLORS.success, textAlign: "center" }} > {score}</Text>
+            <Text style={{ fontSize: 30, color: COLORS.grey, textAlign: "center" }}>/ {allQuestions.length} </Text>
+          </View>
+
+          <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop: 5, color: COLORS.grey}}>
             Congratulations!
           </Text>
-          <Text style={{ fontSize: 15, textAlign: "center" }}>
+          <Text style={[stylesheet.text, { textAlign: "center" }]}>
             Your results show that you have an excellent understanding about
             cats!
           </Text>
+          <TouchableOpacity onPress={adoptNowBtn}
+            style={[stylesheet.colorOutlineButton, {borderRadius: 10 }]}>
+            <Text style={stylesheet.colorOutlineButtonText}>Adopt now</Text>
+          </TouchableOpacity>
         </View>
       );
     } else if (score < allQuestions.length / 2 + 1) {
       return (
         <View>
-          <Text style={{ fontSize: 25, fontWeight: "bold", textAlign: "center" }}>Try harder!</Text>
-          <Text style={{ fontSize: 15, textAlign: "center"}}>
-            Your results show that you have a poor understanding of cats. You
-            can find out more information below!
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <Text style={{ fontSize: 30, color: COLORS.red, textAlign: "center" }} > {score}</Text>
+            <Text style={{ fontSize: 30, color: COLORS.grey, textAlign: "center" }}>/ {allQuestions.length} </Text>
+          </View>
+          <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop: 5, color: COLORS.grey}}>Try harder!</Text>
+          <Text style={[stylesheet.text, { textAlign: "center" }]}>
+            Your results show that you have a poor understanding of cats!
           </Text>
+          <TouchableOpacity style={[stylesheet.colorOutlineButton, {borderRadius: 10, width: "100%" }]} onPress={() => Linking.openURL(CATFACTS_URL)}>
+              <Text style={[stylesheet.colorOutlineButtonText, {marginLeft: 5 }]}>See 101 Amazing Cat Facts</Text>
+          </TouchableOpacity>
         </View>
       );
     } else {
       return (
         <View>
-          <Text style={{ fontSize: 25, fontWeight: "bold", textAlign: "center" }}>"Not bad!"</Text>
-          <Text style={{ fontSize: 15, textAlign: "center"}}>
-              You have most of the questions correct! Read more about cats below! 
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <Text style={{ fontSize: 30, color: COLORS.yellow, textAlign: "center" }} > {score}</Text>
+            <Text style={{ fontSize: 30, color: COLORS.grey, textAlign: "center" }}>/ {allQuestions.length} </Text>
+          </View>
+          <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop: 5, color: COLORS.grey}}>Almost perfect!</Text>
+          <Text style={[stylesheet.text, { textAlign: "center" }]}>
+              You have most of the questions correct! 
           </Text>
+          <TouchableOpacity style={[stylesheet.colorOutlineButton, {borderRadius: 10, width: "100%" }]} onPress={() => Linking.openURL(CATFACTS_URL)}>
+              <Text style={[stylesheet.colorOutlineButtonText, {marginLeft: 5 }]}>See 101 Amazing Cat Facts</Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -334,18 +380,8 @@ const Quiz = () => {
                 alignItems: "center",
               }}
             >
-              {/* <Text style={{ fontSize: 30, fontWeight: "bold" }}>
-                {score> allQuestions.length-1 ?
-                "Congratulations!"
-                : "Oops!"}
-              </Text>
-              <Text style={{ fontSize: 15 }}>
-                {score> allQuestions.length-1 ?
-                "Your results show that you have an excellent understanding about cats!"
-                : "Try harder!"}
-              </Text> */}
 
-              <View
+              {/* <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "flex-start",
@@ -353,9 +389,7 @@ const Quiz = () => {
                   marginVertical: 10,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 30,
+                <Text style={{ fontSize: 30,
                     color:
                       score > allQuestions.length / 2
                         ? COLORS.success
@@ -372,11 +406,9 @@ const Quiz = () => {
                 >
                   / {allQuestions.length}
                 </Text>
-              </View>
+              </View> */}
 
-              <View
-                style={{ marginVertical: 10}}
-              >
+              <View style={{ marginVertical: 10}} >
                 {scoreMessage()}
               </View>
 
@@ -387,7 +419,7 @@ const Quiz = () => {
                   backgroundColor: COLORS.accent,
                   padding: 20,
                   width: "100%",
-                  borderRadius: 20,
+                  borderRadius: 10,
                   marginVertical: 10,
                 }}
               >
@@ -408,16 +440,16 @@ const Quiz = () => {
         {/* Background Image */}
 
         <Image
-          source={require("../../assets/DottedBG.png")}
+          source={require("../../assets/quizBG.png")}
           style={{
             width: SIZES.width,
-            height: 130,
-            zIndex: -1,
+            height: 140,
+            zIndex: -2,
             position: "absolute",
-            bottom: 0,
+            bottom: -30,
             left: 0,
             right: 0,
-            opacity: 0.5,
+            opacity: 0.8,
           }}
           //resizeMode={'contain'}
         />

@@ -13,10 +13,15 @@ import { stylesheet } from "../styles/stylesheet";
 import firebase from "../database/firebaseDB";
 import { collection, getDocs } from "firebase/firestore";
 import { Card } from "react-native-paper";
+
 import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+
 import { auth } from "../database/firebaseDB";
 //const auth = firebase.auth();
 import moment from "moment";
+import { COLORS } from "../constants/theme";
 
 const db = firebase.firestore();
 
@@ -36,7 +41,7 @@ export default function DiscoverScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = db.collection("posts").onSnapshot((collection) => {
+    const unsubscribe = db.collection("posts").orderBy('created', 'desc').onSnapshot((collection) => {
       const data = collection.docs.map((doc) => {
         // console.log(doc.data().uid);
 
@@ -49,7 +54,7 @@ export default function DiscoverScreen({ navigation }) {
           postObject.user = userDoc.data().username;
         })
 
-        console.log(postObject);
+        //console.log(postObject);
 
         return postObject;
       });
@@ -125,7 +130,8 @@ export default function DiscoverScreen({ navigation }) {
             <View
               style={{
                 flexDirection: "row",
-                marginVertical: 10,
+                marginTop: 15,
+                marginBottom: 5,
                 marginHorizontal: 10,
               }}
             >
@@ -145,29 +151,34 @@ export default function DiscoverScreen({ navigation }) {
                 </Text>
               </View>
               <View style={{ justifyContent: "center", marginHorizontal: 10 }}>
-                <Text>{item.username}</Text>
+                <Text style={stylesheet.smallLabel}>{item.username}</Text>
               </View>
             </View>
             <Image style={styles.image} source={{ uri: item.image }} />
-            <View style={{ margin: 10 }}>
-              <Text style={stylesheet.label}>{item.catName}</Text>
-              <View style={[stylesheet.label, { flexDirection: "row" }]}>
-                <Text style={[stylesheet.smallLabel, { marginRight: 20 }]}>
-                  {item.catAge + " year old"}
+            <View style={{ marginHorizontal: 20, marginVertical: 20 }}>
+              <Text style={[stylesheet.label, { fontSize: 20 }]}>{item.catName}</Text>
+              <View style={[stylesheet.label, { flexDirection: "row", marginTop: 5}]}>
+                <Entypo name="cake" size={18} color="#52495B" />
+                <Text style={[stylesheet.smallLabel, { marginRight: 20, paddingLeft: 5, paddingTop: 3 }]}>
+                  {item.catAge + " year-old"}
                 </Text>
-                <Text style={stylesheet.smallLabel}>{item.breed}</Text>
+                <FontAwesome5 name="cat" size={18} color="#52495B" />
+                <Text style={[stylesheet.smallLabel, { marginRight: 20, paddingLeft: 5, paddingTop: 3 }]}>{item.breed}</Text>
               </View>
-              <Text>Posted {postDate}</Text>
-              {/* <TouchableOpacity onPress={() => likePost( item.id )}>
-                  <Ionicons name="heart-outline" size={24} />          
-               </TouchableOpacity> */}
-              <TouchableOpacity onPress={() => likePost(item.id)}>
-                <Ionicons
-                  name={isLiked ? "heart" : "heart-outline"}
-                  size={24}
-                />
-                <Text>{postLikesCount} likes</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
+              <View>
+                <TouchableOpacity style={{ marginTop: 10 }} onPress={() => likePost(item.id)}>
+                  <Ionicons
+                    name={isLiked ? "heart" : "heart-outline"}
+                    size={24}
+                    color={COLORS.red}
+                  />
+                  <Text style={stylesheet.text}>{postLikesCount} likes</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ justifyContent: "flex-end"}}><Text style={stylesheet.text}>Posted {postDate}</Text></View>
+              
+              </View>
             </View>
           </Card>
         </View>
@@ -203,12 +214,14 @@ const deviceWidth = Math.round(Dimensions.get("window").width);
 const styles = StyleSheet.create({
   image: {
     justifyContent: "center",
-    width: deviceWidth - 20,
-    height: 200,
+    width: deviceWidth - 40,
+    height: 250,
+    borderRadius: 5,
+    marginHorizontal: 10,
   },
   userIcon: {
-    width: 45,
-    height: 45,
+    width: 40,
+    height: 40,
     borderRadius: 75,
   },
 });

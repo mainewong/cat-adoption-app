@@ -31,7 +31,7 @@ export default function ApplicationsScreen( {navigation} ) {
     });
     getApplications();
     return removeListener;
-  }, [user]);
+  }, []);
 
 
   async function getApplications() {
@@ -61,31 +61,27 @@ export default function ApplicationsScreen( {navigation} ) {
         <View
           style={{
             padding: 10,
-            paddingTop: 20,
-            paddingBottom: 20,
+            paddingTop: 30,
+            paddingBottom: 30,
             borderBottomColor: "#ccc",
             borderBottomWidth: 1,
             flexDirection: "row",
             justifyContent: "flex-start",
           }}
         >
-          <Image style={styles.image} source={{ uri: item.image }} />
+          <Image style={stylesheet.catIcon} source={{ uri: item.image }} />
 
-          <View style={{ marginLeft: 15 }}>
-            <Text style={stylesheet.label}>{item.catName}</Text>
-            <Text>Applied {postDate}</Text>
-            <Text>Status: Pending</Text>
-            <Text style={[stylesheet.itemLabel, { marginTop: 20 }]}>Your Application Info</Text>
-            <Text>Full name: {item.applyName}</Text>
-            <Text>Contact: {item.applyContact}</Text>
-            <Text>House Type: {item.houseType}</Text> 
+          <View style={{ marginLeft: 15, justifyContent: "center" }}>
+            <Text style={[stylesheet.label, { marginBottom: 5 }]}>{item.catName}</Text>
+            <Text style={stylesheet.text}>Applied on: {postDate}</Text>
+            <Text style={stylesheet.text}>Status: Application received</Text>
           </View>
         </View>
     );
   }
 
   return (
-    <View style={stylesheet.container}>
+    <View style={[stylesheet.container, {backgroundColor: "#fafafa" }]}>
       <FlatList
         data={myApplications}
         renderItem={renderApplications}

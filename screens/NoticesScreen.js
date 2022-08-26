@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Modal,
   FlatList,
   Alert,
   Card,
@@ -13,6 +12,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { stylesheet } from "../styles/stylesheet";
 import { FontAwesome } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import moment from "moment";
 import firebase from "../database/firebaseDB";
 import { collection, getDocs } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,7 +24,6 @@ const db = firebase.firestore();
 export default function NoticesScreen({ navigation, route }) {
   const [myPosts, setMyPosts] = useState([]);
   const [user, setUser] = useState("");
-  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     console.log("Setting up nav listener");
@@ -47,6 +48,7 @@ export default function NoticesScreen({ navigation, route }) {
         <TouchableOpacity onPress={addPost}>
           <FontAwesome
             name="plus"
+            color="white"
             size={20}
             style={[styles.icon, { marginRight: 25 }]}
           />
@@ -62,6 +64,7 @@ export default function NoticesScreen({ navigation, route }) {
     if (user) {
       const unsubscribe = await db
         .collection("posts")
+        .orderBy('created', 'desc')
         .onSnapshot((collection) => {
           const data = collection.docs.map((doc) => ({
             ...doc.data(),
@@ -76,20 +79,11 @@ export default function NoticesScreen({ navigation, route }) {
     }
   }
 
-  async function showDeleteModal() {
-    setDeleteModal(true);
-  }
-
-  const closeModal = () => {
-    setDeleteModal(false);
-    navigation.navigate("Notices");
-  };
-
   async function deletePost(id) {
     const currentDoc = await db.collection("posts").doc(id).get()
     const imageId = currentDoc.data().imageId
     await db.collection("posts").doc(id).delete()
-    Alert.alert("Marked as adopted!")
+    
     var desertRef = storageRef.child(imageId + ".png");
 
     // Delete the file
@@ -98,12 +92,11 @@ export default function NoticesScreen({ navigation, route }) {
     }).catch((error) => {
       // Uh-oh, an error occurred!
     });
-
-    
     //navigation.navigate("home");
   }
 
   function renderItem({ item }) {
+    const postDate = moment(item.created.toDate()).format('ll');
     return (
       <TouchableOpacity
         onPress={() =>
@@ -116,70 +109,34 @@ export default function NoticesScreen({ navigation, route }) {
           style={{
             padding: 10,
             paddingTop: 20,
-            paddingBottom: 20,
+            paddingBottom: 10,
             borderBottomColor: "#ccc",
             borderBottomWidth: 1,
             flexDirection: "row",
             justifyContent: "flex-start",
           }}
         >
-          <Image style={styles.image} source={{ uri: item.image }} />
+          <Image style={[styles.image, {marginTop: 5 }]} source={{ uri: item.image }} />
 
           <View style={{ marginLeft: 15 }}>
-            <Text style={stylesheet.label}>{item.catName}</Text>
-            <Text>{item.catAge + " year old"}</Text>
-            <Text>{item.breed}</Text>
-            <TouchableOpacity
-              onPress={showDeleteModal}
-              style={[stylesheet.button, { width: 180 }]}
-            >
-              {/* <Ionicons name="trash" size={16} color="#944" /> */}
-              <Text style={stylesheet.buttonText}>Mark as adopted</Text>
-              <Modal
-          animationType="slide"
-          transparent={true}
-          visible={deleteModal}
-        >
-          <View
-            style={{
-              flex: 1,
-              background: "white",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: "lightgrey",
-                width: "90%",
-                borderRadius: 20,
-                padding: 30,
-                alignItems: "center",
-              }}
-            >
-              <Text style={stylesheet.label}>Confirm mark as adopted?</Text>
-              <TouchableOpacity
-              onPress={() => deletePost(item.id)}
-              style={[stylesheet.button, { width: 180 }]}
-            >
-              {/* <Ionicons name="trash" size={16} color="#944" /> */}
-              <Text style={stylesheet.buttonText}>Mark as adopted</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[stylesheet.button, { width: "80%" }]}>
-                <Text
-                  style={stylesheet.buttonText}
-                  onPress={() => {
-                    closeModal();
-                  }}
-                >
-                  Cancel
-                </Text>
-              </TouchableOpacity>
+            <Text style={[stylesheet.label, {marginTop: 5, fontSize: 18 }]}>{item.catName}</Text>
+            <View style={{flexDirection: "row", alignItems: "center", marginTop: 5}}>
+              <Entypo name="calendar" size={18} color="#52495B" />
+              <Text style={[stylesheet.text, {marginLeft: 10 }]}>{item.catAge + " year-old"}</Text>
             </View>
-          </View>
-        </Modal>
+            <View style={{flexDirection: "row", alignItems: "center", marginTop: 5 }}>
+              <FontAwesome5 name="cat" size={18} color="#52495B" />
+              <Text style={[stylesheet.text, {marginLeft: 10, marginTop: 5}]}>{item.breed}</Text>
+            </View>
+            
+            <TouchableOpacity
+              onPress={() => deletePost(item.id)}
+              style={[stylesheet.colorOutlineButton, { width: 200 }]}
+            >
+              {/* <Ionicons name="trash" size={16} color="#944" /> */}
+              <Text style={stylesheet.colorOutlineButtonText}>Mark as adopted</Text>
             </TouchableOpacity>
+            <Text style={[stylesheet.text, {fontSize: 13, alignSelf: "flex-end", marginTop: 8 }]}>Posted on {postDate}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -195,7 +152,6 @@ export default function NoticesScreen({ navigation, route }) {
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
-    
   );
 }
 
@@ -204,7 +160,9 @@ const deviceWidth = Math.round(Dimensions.get("window").width);
 const styles = StyleSheet.create({
   image: {
     justifyContent: "center",
-    width: 150,
-    height: 150,
+    width: 140,
+    height: 140,
+    marginHorizontal: 5,
+    borderRadius: 20,
   },
 });
